@@ -1,0 +1,80 @@
+<div class="primeng-datatable">
+    <p-table #dashboardleavedata [value]="LeaveReportList" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
+        styleClass="ui-table-primedatatable" [rowHover]="true" [rowsPerPageOptions]="[10,25,50]" [filterDelay]="0"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [scrollable]="true"
+        (sortFunction)="customSortForDashboardLeavesTable($event)" [customSort]="true" scrollHeight="auto"
+        [globalFilterFields]="['fullName','leaveStartDate','leaveEndDate','numberOfDays','leaveType',
+    'reason','status','createdBy','modifiedBy']">
+        <!-- Top bar -->
+        <ng-template pTemplate="caption">
+            <div class="ui-helper-clearfix" style="text-align: left">
+                <!-- globle search -->
+                <input type="text" class="globalSearchTxt"
+                    (input)="dashboardleavedata.filterGlobal($event.target.value, 'contains')" placeholder="Search" />
+            </div>
+        </ng-template>
+        <!-- Table Header -->
+        <ng-template pTemplate="header">
+            <tr>
+                <th pSortableColumn="fullName" style="width: 10em;">Employee
+                    <p-sortIcon field="fullName"></p-sortIcon>
+                </th>
+                <th pSortableColumn="leaveStartDate" style="width: 8em;">Start Date
+                    <p-sortIcon field="leaveStartDate"></p-sortIcon>
+                </th>
+                <th pSortableColumn="leaveEndDate" style="width: 8em;">End Date
+                    <p-sortIcon field="leaveEndDate"></p-sortIcon>
+                </th>
+                <th pSortableColumn="numberOfDays" style="width: 5em;">Days
+                    <p-sortIcon field="numberOfDays"></p-sortIcon>
+                </th>
+                <th pSortableColumn="displayNameForLeave" style="width: 5em;">Leaves For
+                    <p-sortIcon field="displayNameForLeave"></p-sortIcon>
+                </th>
+                <th pSortableColumn="leaveType" style="width: 6em;">Type
+                    <p-sortIcon field="leaveType"></p-sortIcon>
+                </th>
+                <th pSortableColumn="reason" style="width: 6em;">Reason
+                    <p-sortIcon field="reason"></p-sortIcon>
+                </th>
+                <th pSortableColumn="status" style="width: 6em;">Status
+                    <p-sortIcon field="status"></p-sortIcon>
+                </th>
+                <th pSortableColumn="createdBy" style="width: 9em;">Created By
+                    <p-sortIcon field="createdBy"></p-sortIcon>
+                </th>
+                <th pSortableColumn="modifiedBy" style="width: 9em;">Modified By
+                    <p-sortIcon field="modifiedBy"></p-sortIcon>
+                </th>
+            </tr>
+        </ng-template>
+        <!-- Table row -->
+        <ng-template pTemplate="body" let-leavereportlistfordashboard>
+            <tr>
+                <td style="width: 10em;text-align: left;padding-left: 8px !important;">
+                    {{ leavereportlistfordashboard.fullName}}</td>
+                <td style="width: 8em;">{{ leavereportlistfordashboard.leaveStartDate }}</td>
+                <td style="width: 8em;">{{ leavereportlistfordashboard.leaveEndDate }}</td>
+                <td style="width: 5em;">{{ leavereportlistfordashboard.numberOfDays }} Day</td>
+                <td style="width: 5em;">{{ leavereportlistfordashboard.displayNameForLeave }}</td>
+                <td style="width: 6em;">{{ leavereportlistfordashboard.leaveType }}</td>
+                <td style="width: 6em;">{{ leavereportlistfordashboard.reason }}</td>
+                <td style="width: 6em;">
+                    <span [class]="'datatable-badge status-' + leavereportlistfordashboard.status">
+                        {{leavereportlistfordashboard.status}}
+                    </span>
+                </td>
+                <td style="width: 9em;text-align: left;padding-left: 8px !important;">
+                    {{leavereportlistfordashboard.createdBy}}</td>
+                <td style="width: 9em;text-align: left;padding-left: 8px !important;">
+                    {{leavereportlistfordashboard.modifiedBy}}</td>
+            </tr>
+        </ng-template>
+        <!-- No records found -->
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="9" style="text-align:center">No records found.</td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>

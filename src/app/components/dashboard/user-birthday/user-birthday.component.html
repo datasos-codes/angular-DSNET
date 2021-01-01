@@ -1,0 +1,36 @@
+<div class="primeng-datatable">
+    <p-table #userbirthdaytable [value]="userBirthdayList" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
+        styleClass="ui-table-primedatatable" [rowHover]="true" [rowsPerPageOptions]="[10,25,50]"
+        (sortFunction)="customSortForEmployeeBirthdayTable($event)" [customSort]="true"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [scrollable]="true"
+        scrollHeight="auto">
+        <!-- Table Header -->
+        <ng-template pTemplate="header">
+            <tr>
+                <th pSortableColumn="name" style="width: 12em;">Employee
+                    <p-sortIcon field="name"></p-sortIcon>
+                </th>
+                <th pSortableColumn="designation" style="width: 12em;">Designation
+                    <p-sortIcon field="designation"></p-sortIcon>
+                </th>
+                <th pSortableColumn="date" style="width: 8em;">Date
+                    <p-sortIcon field="date"></p-sortIcon>
+                </th>
+            </tr>
+        </ng-template>
+        <!-- Table row -->
+        <ng-template pTemplate="body" let-userBirthday>
+            <tr>
+                <td style="width: 12em;text-align: left;padding-left: 8px !important;">{{ userBirthday.name}}</td>
+                <td style="width: 12em;">{{ userBirthday.designation}}</td>
+                <td style="width: 8em;">{{userBirthday.date}}</td>
+            </tr>
+        </ng-template>
+        <!-- No records found -->
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="3" style="text-align:center">No records found.</td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>

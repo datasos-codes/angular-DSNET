@@ -1,0 +1,372 @@
+// Here you can add other styles
+
+.asteriskRequiredColor {
+  border: 0;
+  // padding: 1em;
+  color: red;
+}
+
+.alertClass {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  width: 15%;
+  border-radius: 0px;
+  z-index: 9999;
+  margin-top: 4px;
+  margin-right: 10px;
+}
+
+.tableBottom {
+  margin-bottom: 0.5rem !important;
+}
+
+.tableCardbody {
+  padding: 1rem !important;
+}
+
+// PrimeNg datatable CSS start
+
+body .ui-paginator .ui-dropdown {
+  float: left !important;
+}
+
+body .ui-paginator .ui-paginator-current {
+  float: right !important;
+}
+
+body .ui-paginator {
+  border: 0 !important;
+  padding: 0.2em !important;
+}
+
+body .ui-table-primedatatable {
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.14), 0 2px 1px -1px rgba(0, 0, 0, 0.12) !important;
+}
+
+body .datatable-badge {
+  border-radius: 2px !important;
+  padding: 0.25em 0.5em !important;
+  text-transform: uppercase !important;
+  font-weight: 700 !important;
+  font-size: 12px;
+  letter-spacing: 0.3px;
+
+  &.status-Active {
+    background-color: #c8e6c9;
+    color: #256029;
+  }
+
+  &.status-Inactive {
+    background-color: #ffd8b2;
+    color: #805b36;
+  }
+
+  &.status-Accept {
+    background-color: #c8e6c9;
+    color: #256029;
+  }
+
+  &.status-Pending {
+    background-color: #b3e5fc;
+    color: #23547b;
+  }
+
+  &.status-Reject {
+    background-color: #ffcdd2;
+    color: #c63737;
+  }
+
+  &.status-Yes {
+    background-color: #c8e6c9;
+    color: #256029;
+  }
+
+  &.status-No {
+    background-color: #ffcdd2;
+    color: #c63737;
+  }
+}
+
+.columnStyle {
+  width: 140px;
+}
+
+.companyEmailStyle {
+  width: 200px;
+}
+
+// PrimeNg datatable CSS end
+
+.p-dropdownStyle {
+  p-dropdown {
+    .ui-dropdown-label-container {
+      width: 100% !important;
+    }
+
+    .ui-dropdown.ui-dropdown-clearable .ui-dropdown-label {
+      text-overflow: ellipsis !important;
+      padding-right: 2em !important;
+    }
+
+    .ui-dropdown .ui-dropdown-label {
+      text-overflow: ellipsis !important;
+      padding-right: 1em !important;
+    }
+
+    .ui-dropdown {
+      border: 1px solid #e4e7ea;
+      width: 100% !important;
+      // max-width: 100% !important;
+      // min-width: 100% !important;
+    }
+
+    .ui-inputtext {
+      color: #5c6873;
+    }
+
+    .ui-dropdown:not(.ui-state-disabled):hover {
+      border-color: #e4e7ea;
+    }
+
+    .ui-dropdown .ui-dropdown-panel {
+      min-width: 100%;
+      width: 100%;
+    }
+
+    .ui-dropdown-item,
+    .ui-dropdown-item-group.ui-state-highlight {
+      word-break: break-all;
+    }
+  }
+}
+
+.timePickerInputtext {
+  .ui-inputtext {
+    border: 1px solid #e4e7ea;
+  }
+
+  .ui-inputtext:enabled:hover:not(.ui-state-error) {
+    border: 1px solid #e4e7ea;
+  }
+}
+
+// style Chirag
+
+.validationErrorMsg {
+  color: #ff3838 !important;
+  font-weight: 700 !important;
+  font-size: 10px !important;
+}
+
+// Start CSS for add multiple row in timesheet -> employee side
+.multiple-row-table {
+  .ui-inputtext-style {
+    .ui-inputtext {
+      width: 100% !important;
+      min-width: 100% !important;
+    }
+  }
+
+  .table td,
+  .table th {
+    padding: 0.15rem !important;
+  }
+
+  .card-body {
+    padding: 0.6rem !important;
+  }
+
+  .ui-datepicker .ui-timepicker {
+    padding: 0em !important;
+  }
+
+  .table-outline {
+    td {
+      vertical-align: unset !important;
+    }
+  }
+}
+
+// End CSS for add multiple row in timesheet -> employee side
+
+.table-card-style {
+  .card-body {
+    padding: 0.5rem !important;
+  }
+}
+
+// hardik start
+.primeng-datatable {
+  .ui-table .ui-table-tbody {
+    overflow-x: scroll;
+  }
+
+  .ui-table .ui-table-tbody > tr > td {
+    padding: 2px 3px !important;
+    text-align: center;
+  }
+
+  .ui-table .ui-table-thead > tr > th {
+    padding: 2px 3px !important;
+    text-align: center;
+  }
+
+  .ui-table .ui-table-caption {
+    padding: 5px !important;
+  }
+
+  .globalSearchTxt {
+    width: 25% !important;
+    min-width: 25% !important;
+    float: right;
+  }
+}
+
+.modal-style {
+  .modal-header {
+    padding: 0.5rem !important;
+  }
+
+  .modal-body {
+    text-align: left;
+
+    .form-group {
+      margin-bottom: 0.5rem !important;
+    }
+  }
+}
+
+.textarea-size {
+  resize: none;
+  height: 85px;
+  min-height: 85px;
+  max-height: 85px;
+}
+
+.display-dialog-style {
+  .ui-dialog-content {
+    overflow-x: hidden !important;
+    padding: 0.2em 1em !important;
+    overflow: visible !important;
+  }
+}
+
+bs-datepicker-container,
+bs-daterangepicker-container {
+  z-index: 10000 !important;
+}
+
+// global p-textbox
+.ui-inputtext.ng-dirty.ng-invalid {
+  border-color: #a6a6a6 !important;
+}
+
+.timePickerStyle {
+  .ui-datepicker .ui-timepicker span {
+    font-size: 1em !important;
+  }
+
+  p-calendar.ng-dirty.ng-invalid > .ui-calendar > .ui-inputtext {
+    border-color: #a6a6a6 !important;
+  }
+}
+
+.ui-modal-content {
+  .ui-dialog .ui-dialog-content {
+    overflow-x: hidden;
+    overflow: visible;
+  }
+}
+
+.invoice-datatable .ui-table .ui-table-tbody > tr > td {
+  /* padding: 2px 3px !important; */
+  text-align: center;
+}
+
+.invoice-datatable .ui-table .ui-table-thead > tr > th {
+  text-align: center;
+  padding: 0px !important;
+}
+
+// hardik end
+
+.callout {
+  margin: 0.5rem 0 !important;
+  padding: 0 0.5rem !important;
+}
+
+.breadcrumb {
+  margin-bottom: 1rem !important;
+}
+
+// .main .container-fluid {
+//   padding: 0 10px !important;
+// }
+
+.card {
+  margin-bottom: 1rem !important;
+}
+
+.widgets-totals {
+  margin-top: 0.8rem !important;
+}
+
+.multiselect-dropdown {
+  .ui-multiselect {
+    border: 1px solid #e4e7ea;
+  }
+
+  .ui-multiselect:not(.ui-state-disabled):hover {
+    border: 1px solid #e4e7ea;
+  }
+
+  p-multiselect.ng-dirty.ng-invalid > .ui-multiselect {
+    border: 1px solid #e4e7ea;
+  }
+}
+
+.attachment-filename {
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.attachment-filename:hover {
+  overflow: visible;
+  overflow-wrap: break-word;
+}
+
+.permissionInerButtons {
+  .ui-table-scrollable-body {
+    overflow-x: hidden;
+  }
+}
+
+// document select file style
+.dropZone-style {
+  height: 50px !important;
+  margin: auto !important;
+  border: 2px dotted #0782d0 !important;
+  border-radius: 30px !important;
+}
+
+.content-style {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  height: 45px !important;
+  color: #0782d0 !important;
+}
+
+.ui-fileupload .ui-fileupload-content {
+  word-break: break-all;
+}
+
+.ui-messages ul > li {
+  padding-top: 15px;
+}
+
+.ui-messages.ui-messages-error .ui-messages-icon {
+  color: #212121;
+  padding-top: 12px;
+}

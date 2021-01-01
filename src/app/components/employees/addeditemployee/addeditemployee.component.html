@@ -1,0 +1,222 @@
+<div class="card">
+    <div class="card-header">
+        <i class="fa" [ngClass]="{'fa-plus': !getEmployeeIdFromParams, 'fa-edit': getEmployeeIdFromParams}"></i>
+        <strong>{{lableName}}</strong>&nbsp;<small>Details</small>
+        <div class="card-header-actions">
+            <div class="col-6 col-sm-4 col-md mb-3 mb-xl-0 text-center">
+                <button type="button" class="btn btn-primary btn-sm" routerLink='/employees'><i
+                        class="fa fa-long-arrow-left"></i> Back
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <form [formGroup]="addEditEmployeeForm" (ngSubmit)="onSubmitAddEditEmployeeForm()">
+            <div class="form-group row">
+                <div class="col-sm-4">
+                    <label>First Name<span class="asteriskRequiredColor">*</span> :</label>
+                    <input type="text" formControlName="firstName" class="form-control" placeholder="Enter first name.."
+                        [ngClass]="{ 'is-invalid': submitted && f.firstName.errors }" [ngModel]="employee.firstName">
+                    <div *ngIf="submitted && f.firstName.errors" class="validationErrorMsg">
+                        <div *ngIf="f.firstName.errors.required">First Name is required</div>
+                        <div *ngIf="f.firstName.errors.pattern">Invalid first name.</div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <label>Middle Name<span class="asteriskRequiredColor">*</span> :</label>
+                    <input type="text" formControlName="middleName" name="middleName" class="form-control"
+                        placeholder="Enter middle name.." [ngClass]="{ 'is-invalid': submitted && f.middleName.errors }"
+                        [ngModel]="employee.middleName">
+                    <div *ngIf="submitted && f.middleName.errors" class="validationErrorMsg">
+                        <div *ngIf="f.middleName.errors.required">Middle Name is required</div>
+                        <div *ngIf="f.middleName.errors.pattern">Invalid middle name.</div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <label>Last Name<span class="asteriskRequiredColor">*</span> :</label>
+                    <input type="text" formControlName="lastName" name="lastName" class="form-control"
+                        placeholder="Enter last name.." [ngClass]="{ 'is-invalid': submitted && f.lastName.errors }"
+                        [ngModel]="employee.lastName">
+                    <div *ngIf="submitted && f.lastName.errors" class="validationErrorMsg">
+                        <div *ngIf="f.lastName.errors.required">Last Name is required</div>
+                        <div *ngIf="f.lastName.errors.pattern">Invalid last name.</div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-sm-4">
+                    <label>Birth Date<span class="asteriskRequiredColor">*</span> :</label>
+                    <input type="text" class="form-control" placeholder="Enter Birth Date" bsDatepicker
+                        [ngModel]='employee.tbirthDate' onkeydown="return false" formControlName="tbirthDate"
+                        [ngClass]="{ 'is-invalid': submitted && f.tbirthDate.errors }" [maxDate]='maxDate'
+                        [bsConfig]="{ dateInputFormat: 'YYYY-MM-DD', containerClass: 'theme-red',isAnimated: true , returnFocusToInput: true}" />
+                    <div *ngIf="submitted && f.tbirthDate.errors" class="validationErrorMsg">
+                        <div *ngIf="f.tbirthDate.errors.required">Birth Date is required</div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <label>Company Email<span class="asteriskRequiredColor">*</span> :</label>
+                    <input type="text" class="form-control" formControlName="companyEmail"
+                        [ngModel]='employee.companyEmail' name="companyEmail" placeholder="Enter company email"
+                        [ngClass]="{ 'is-invalid': submitted && f.companyEmail.errors }">
+                    <div *ngIf="submitted && f.companyEmail.errors" class="validationErrorMsg">
+                        <div *ngIf="f.companyEmail.errors.required">Company Email is required.</div>
+                        <div *ngIf="f.companyEmail.errors.email">Company email must be a valid email address.</div>
+                    </div>
+
+                </div>
+                <div class="col-sm-4">
+                    <label>Pan Number<span class="asteriskRequiredColor">*</span> :</label>
+                    <input type="text" formControlName="panNumber" name="panNumber" class="form-control"
+                        placeholder="Enter Pan Number.." [ngClass]="{ 'is-invalid': submitted && f.panNumber.errors }"
+                        [ngModel]="employee.panNumber" onpaste="return false"
+                        oninput="this.value = this.value.toUpperCase()" maxlength="10">
+                    <div *ngIf="submitted && f.panNumber.errors" class="validationErrorMsg">
+                        <div *ngIf="f.panNumber.errors.required">PAN number is required.</div>
+                        <div *ngIf="f.panNumber.errors?.pattern">PAN number is invalid.</div>
+                        <div *ngIf="f.panNumber.errors?.minlength">Minimum 10 digits allowed.</div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-sm-4">
+                    <label>Adhar Number<span class="asteriskRequiredColor">*</span> :</label>
+                    <input type="text" formControlName="aadharNumber" name="aadharNumber" class="form-control"
+                        placeholder="Enter Adhar Number.."
+                        [ngClass]="{ 'is-invalid': submitted && f.aadharNumber.errors }"
+                        [ngModel]="employee.aadharNumber" onpaste="return false" maxlength="12"
+                        (keypress)="onlyNumberKey($event)">
+                    <div *ngIf="submitted && f.aadharNumber.errors" class="validationErrorMsg">
+                        <div *ngIf="f.aadharNumber.errors.required">Aadhar Number is required.</div>
+                        <div *ngIf="f.aadharNumber.errors?.minlength">
+                            Minimum 12 digits are allowed.
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4 p-dropdownStyle">
+                    <label>Designation<span class="asteriskRequiredColor">*</span> :</label><br>
+                    <p-dropdown formControlName="designationId" [style]="{'width':'100%'}"
+                        [options]="employeeDesignationList" [filter]="true" placeholder="Designation name"
+                        [ngModel]="employee.designationId"
+                        [ngClass]="{ 'is-invalid': submitted && f.designationId.errors }"></p-dropdown>
+                    <div *ngIf="submitted && f.designationId.errors" class="validationErrorMsg">
+                        <div *ngIf="f.designationId.errors.required">Designation is required</div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <label>User name<span class="asteriskRequiredColor">*</span> :</label>
+                    <input type="text" formControlName="userName" name="userName" class="form-control"
+                        placeholder="Enter User name.." [ngClass]="{ 'is-invalid': submitted && f.userName.errors }"
+                        [ngModel]="employee.userName">
+                    <div *ngIf="submitted && f.userName.errors" class="validationErrorMsg">
+                        <div *ngIf="f.userName.errors.required">User Name is required</div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-sm-4">
+                    <label>Password<span class="fontcolor">*</span> :</label>
+                    <div class="input-group">
+                        <input [type]="isShowPassword ? 'text' : 'password'" id="passwordValue" #passwordValue
+                            placeholder="Enter password" class="subject-title form-control" formControlName="empPassword"
+                            [ngClass]="{ 'is-invalid': submitted && f.empPassword.errors }" [ngModel]="employee.empPassword"
+                            minlength="6" maxlength="15">
+                        <div class="input-group-prepend passwordText">
+                            <span class="input-group-text">
+                                <i id='showPasswordicon' [class]="isShowPassword ? 'fa fa-eye-slash' : 'fa fa-eye'"
+                                    (click)='isNeedToRenderPassword(passwordValue.value)'></i>
+                            </span>
+                        </div>
+
+                        <div *ngIf="submitted && f.empPassword.errors" class="validationErrorMsg">
+                            <div *ngIf="f.empPassword.errors.required">Password is required</div>
+                            <div *ngIf="f.empPassword.errors?.minlength">Min length password is 6.</div>
+                            <div *ngIf="f.empPassword.errors?.maxLength">Max length password is 15.</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <label>Joining Date<span class="asteriskRequiredColor">*</span> :</label>
+                    <input type="text" class="form-control" placeholder="Enter Joining Date" bsDatepicker
+                        [ngModel]='employee.tjoiningDate' onkeydown="return false" formControlName="tjoiningDate"
+                        [ngClass]="{ 'is-invalid': submitted && f.tjoiningDate.errors }" [bsConfig]="{ dateInputFormat: 'YYYY-MM-DD', containerClass: 'theme-red',
+                        isAnimated: true , returnFocusToInput: true}" />
+                    <div *ngIf="submitted && f.tjoiningDate.errors" class="validationErrorMsg">
+                        <div *ngIf="f.tjoiningDate.errors.required">Joining Date is required</div>
+                    </div>
+                </div>
+                <div class="col-sm-4 p-dropdownStyle">
+                    <label>Role :</label>
+                    <p-dropdown formControlName="roleId" [style]="{'width':'100%'}" [options]="allRoles" [filter]="true"
+                        placeholder="Roles" [ngModel]="employee.roleId"
+                        [ngClass]="{ 'is-invalid': submitted && f.roleId.errors }"></p-dropdown>
+                    <div *ngIf="submitted && f.roleId.errors" class="validationErrorMsg">
+                        <div *ngIf="f.roleId.errors.required">Role is required.</div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row p-dropdownStyle">
+                <div class="col-sm-7">
+                    <label>Security Question<span class="asteriskRequiredColor">*</span> :</label>
+                    <p-dropdown formControlName="securityQuestion" [style]="{'width':'100%'}"
+                        [options]="securityQuestionTypes" [filter]="true" placeholder="Security Question"
+                        [ngModel]="employee.securityQuestion"
+                        [ngClass]="{ 'is-invalid': submitted && f.securityQuestion.errors }">
+                    </p-dropdown>
+                    <div *ngIf="submitted && f.securityQuestion.errors" class="validationErrorMsg">
+                        <div *ngIf="f.securityQuestion.errors.required">Security question is required.</div>
+                    </div>
+                </div>
+                <div class="col-sm-5">
+                    <label>Security Answer<span class="asteriskRequiredColor">*</span> :</label>
+                    <input type="text" formControlName="securityAnswer" name="securityAnswer" class="form-control"
+                        placeholder="Enter Answer.." [ngClass]="{ 'is-invalid': submitted && f.securityAnswer.errors }"
+                        [ngModel]="employee.securityAnswer">
+                    <div *ngIf="submitted && f.securityAnswer.errors" class="validationErrorMsg">
+                        <div *ngIf="f.securityAnswer.errors.required">Security answer is required</div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-sm-4 p-dropdownStyle" *ngIf="isNeedToRender">
+                    <label>Status :</label>
+                    <p-dropdown formControlName="isActive" [style]="{'width':'100%'}" [options]="IsActiveTypes"
+                        [filter]="true" [ngModel]="employee.isActive ? employee.isActive : selectedIsActiveType"
+                        [ngClass]="{ 'is-invalid': submitted && f.isActive.errors }"></p-dropdown>
+                    <div *ngIf="submitted && f.isActive.errors" class="validationErrorMsg">
+                        <div *ngIf="f.isActive.errors.required">Status is required.</div>
+                    </div>
+                </div>
+                <div class="col-sm-4 form-inline" style="margin-top: 25px !important;">
+                    <label class="col-form-label mr-2" for="Gender">Gender : </label>
+                    <div class="col-form-label" [ngClass]="{ 'is-invalid': submitted && f.gender.errors }">
+                        <div class="custom-control custom-radio custom-control-inline" id="gender">
+                            <input class="custom-control-input" type="radio" name="gender" id="inlineRadio1" [value]="1"
+                                formControlName="gender" checked [ngModel]="employee.gender">
+                            <label class="custom-control-label" for="inlineRadio1">Male</label>
+                        </div>
+                        <div class="custom-control custom-radio custom-control-inline">
+                            <input class="custom-control-input" type="radio" name="gender" id="inlineRadio2" [value]="0"
+                                formControlName="gender" [ngModel]="employee.gender">
+                            <label class="custom-control-label" for="inlineRadio2">Female</label>
+                        </div>
+                    </div>
+                    <div *ngIf="submitted && f.gender.errors" class="validationErrorMsg">
+                        <div *ngIf="f.gender.errors.required">Gender is required</div>
+                    </div>
+                </div>
+            </div>
+            <div class="">
+                <button *ngIf="!loading" type="submit" class="btn btn-sm btn-primary m-1">
+                    <span><i class="fa fa-dot-circle-o"></i>&nbsp;Save</span>
+                </button>
+                <button *ngIf="loading" class="btn btn-sm btn-primary m-1" color="primary" type="button" disabled>
+                    <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+                    <span>Loading...</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<p-toast key="commonMsg" position="top-right"  [autoZIndex]="false"   [style]="{'z-index': 10001}"></p-toast>

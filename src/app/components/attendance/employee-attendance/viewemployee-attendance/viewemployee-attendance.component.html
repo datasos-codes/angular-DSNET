@@ -1,0 +1,36 @@
+<div class="wrapper">
+    <div class="row" style="margin: 0 !important;">
+        <div class="form-group col-md-12">
+            <div class="row" style="margin-bottom: 0.3rem !important;">
+                <b> Date : </b> &nbsp; {{attendanceObj?.date}}
+            </div>
+            <div class="row" style="margin-bottom: 0.3rem !important;">
+                <b> Login Time : </b> &nbsp; {{attendanceObj?.loginTime | date:"hh:mm a":"+0000" }}
+            </div>
+            <div class="row" style="margin-bottom: 0.3rem !important;">
+                <b> Logout Time : </b> &nbsp; {{attendanceObj?.logoutTime | date:"hh:mm a":"+0000" }}
+            </div>
+            <div class="row" style="margin-bottom: 0.3rem !important;">
+                <b> Total Hours : </b> &nbsp; {{attendanceObj?.totalHours}}
+            </div>
+            <div class="row" style="margin-bottom: 0.3rem !important;">
+                <b> Created By : </b> &nbsp; {{attendanceObj?.createdBy}}
+            </div>
+            <div class="row" style="margin-bottom: 0.3rem !important;">
+                <b> Modified By : </b> &nbsp; {{attendanceObj?.modifiedBy}}
+            </div>
+            <div class="row" style="margin-bottom: 0.3rem !important;">
+                <b>Status :</b> &nbsp;
+                <span [class]="'datatable-badge status-' + attendanceObj?.isActive">
+                    {{attendanceObj?.isActive}}
+                </span>
+            </div>
+            <div class="row" style="margin-bottom: 0.3rem !important;">
+                <b> Comments : </b> &nbsp;
+                <span>
+                    {{attendanceObj?.comments}}
+                </span>
+            </div>
+        </div>
+    </div>
+</div>

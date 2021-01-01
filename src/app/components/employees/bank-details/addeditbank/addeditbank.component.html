@@ -1,0 +1,84 @@
+<form [formGroup]="empAddEditBankAccFrm" (ngSubmit)="onSubmitEmpAddEditBankAccFrm()">
+    <div class="row">
+        <div class="form-group col-sm-6">
+            <label>Account Number<span class="asteriskRequiredColor">*</span> :</label>
+            <input type="text" class="form-control" formControlName="accountNumber"
+                [ngModel]='employeeBankAcc.accountNumber' name="accountNumber" placeholder="Enter account number"
+                [ngClass]="{ 'is-invalid': submitted && f.accountNumber.errors }" maxlength="15"
+                (keypress)="onlyNumberKey($event)" onpaste="return false">
+            <div *ngIf="submitted && f.accountNumber.errors" class="validationErrorMsg">
+                <div *ngIf="f.accountNumber.errors.required">Account number is required.</div>
+                <div *ngIf="f.accountNumber.errors?.minlength">
+                    Minimum 12 digits are allowed.
+                </div>
+                <div *ngIf="f.accountNumber.errors?.maxlength">
+                    Maximum 15 digits are allowed.
+                </div>
+            </div>
+        </div>
+        <div class="form-group col-sm-6">
+            <label>IFSC Code<span class="asteriskRequiredColor">*</span> :</label>&nbsp;&nbsp;
+            <input type="text" class="form-control" formControlName="ifsc" [ngModel]='employeeBankAcc.ifsc' name="ifsc"
+                placeholder="Enter IFSC Code" onpaste="return false"
+                [ngClass]="{ 'is-invalid': submitted && f.ifsc.errors }">
+            <div *ngIf="submitted && f.ifsc.errors" class="validationErrorMsg">
+                <div *ngIf="f.ifsc.errors.required">IFSC code is required.</div>
+                <div *ngIf="f.ifsc.errors?.invalidIFSC">IFSC code is invalid.</div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-sm-6">
+            <label>Bank Name<span class="asteriskRequiredColor">*</span> :</label>
+            <input type="text" class="form-control" formControlName="bankName" [ngModel]='employeeBankAcc.bankName'
+                name="bankName" placeholder="Enter bank name"
+                [ngClass]="{ 'is-invalid': submitted && f.bankName.errors }">
+            <div *ngIf="submitted && f.bankName.errors" class="validationErrorMsg">
+                <div *ngIf="f.bankName.errors.required">Bank Name is required.</div>
+                <div *ngIf="f.bankName.errors.pattern">Invalid bank name.</div>
+            </div>
+        </div>
+        <div class="form-group col-sm-6">
+            <label>Branch Name<span class="asteriskRequiredColor">*</span> :</label>
+            <input type="text" class="form-control" formControlName="branchName" [ngModel]='employeeBankAcc.branchName'
+                name="branchName" placeholder="Enter branch name"
+                [ngClass]="{ 'is-invalid': submitted && f.branchName.errors }">
+            <div *ngIf="submitted && f.branchName.errors" class="validationErrorMsg">
+                <div *ngIf="f.branchName.errors.required">Branch Name is required.</div>
+                <div *ngIf="f.branchName.errors.pattern">Invalid branch name.</div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-sm-6">
+            <label>Account Holder Name<span class="asteriskRequiredColor">*</span> :</label>
+            <input type="text" class="form-control" formControlName="nameAsInAccount"
+                [ngModel]='employeeBankAcc.nameAsInAccount' name="nameAsInAccount"
+                placeholder="Enter account holder name"
+                [ngClass]="{ 'is-invalid': submitted && f.nameAsInAccount.errors }">
+            <div *ngIf="submitted && f.nameAsInAccount.errors" class="validationErrorMsg">
+                <div *ngIf="f.nameAsInAccount.errors.required">Account Holder Name is required.</div>
+                <div *ngIf="f.nameAsInAccount.errors.pattern">Invalid account holder name.</div>
+            </div>
+        </div>
+        <div class="col-md-6 p-dropdownStyle">
+            <label>Status :</label>
+            <p-dropdown formControlName="isActive" [style]="{'width':'100%'}" [options]="IsActiveTypes" [filter]="true"
+                [ngModel]="employeeBankAcc.isActive ? employeeBankAcc.isActive : selectedIsActiveType"
+                [ngClass]="{ 'is-invalid': submitted && f.isActive.errors }">
+            </p-dropdown>
+            <div *ngIf="submitted && f.isActive.errors" class="validationErrorMsg">
+                <div *ngIf="f.isActive.errors.required">Status is required.</div>
+            </div>
+        </div>
+    </div>
+    <div class="">
+        <button *ngIf="!loading" type="submit" class="btn btn-sm btn-primary m-1">
+            <span><i class="fa fa-dot-circle-o"></i>&nbsp;Save</span>
+        </button>
+        <button *ngIf="loading" class="btn btn-sm btn-primary m-1" color="primary" type="button" disabled>
+            <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+            <span>Loading...</span>
+        </button>
+    </div>
+</form>

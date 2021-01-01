@@ -1,0 +1,49 @@
+<div class="animated fadeIn" *ngIf="isNeedToRenderEPD">
+    <div class="row">
+        <div class="card">
+            <div class="card-header">
+                <i class="fa fa-align-justify"></i> Employee Personal Details
+                <button type="button" class="btn btn-sm btn-primary" routerLink='/employees' style="float: right;">
+                    <i class="fa fa-long-arrow-left"></i> Back
+                </button>
+            </div>
+            <div class="card-body tableCardbody">
+                <tabset>
+                    <tab *ngIf='employeeAddressScreen === true'>
+                        <ng-template tabHeading><i class="fa fa-address-card-o"></i> Address</ng-template>
+                        <app-address-list [employeeId]='employeeId'></app-address-list>
+                    </tab>
+                    <tab *ngIf='employeeMobileScreen === true'>
+                        <ng-template tabHeading><i class="cui-phone"></i> Mobile</ng-template>
+                        <app-mobile-list [employeeId]='employeeId'></app-mobile-list>
+                    </tab>
+                    <tab *ngIf='employeeEmailScreen === true'>
+                        <ng-template tabHeading><i class="cui-phone"></i> Email</ng-template>
+                        <app-email-list [employeeId]='employeeId'></app-email-list>
+                    </tab>
+                    <tab *ngIf='employeeDesignationScreen === true'>
+                        <ng-template tabHeading><i class="cui-user"></i> Designation</ng-template>
+                        <app-designation-list [employeeId]='employeeId'></app-designation-list>
+                    </tab>
+                    <tab *ngIf='employeeSalaryScreen === true'>
+                        <ng-template tabHeading><i class="fa fa-money"></i> Salary</ng-template>
+                        <app-salary-list [employeeId]='employeeId'></app-salary-list>
+                    </tab>
+                    <tab *ngIf='employeeDocumentScreen === true'>
+                        <ng-template tabHeading><i class="fa fa-book"></i> Document</ng-template>
+                        <app-documents-list [employeeId]='employeeId'></app-documents-list>
+                    </tab>
+                    <tab *ngIf='employeeBankScreen === true'>
+                        <ng-template tabHeading><i class="fa fa-university"></i> Bank </ng-template>
+                        <app-bank-list [employeeId]='employeeId'></app-bank-list>
+                    </tab>
+                    <tab *ngIf='employeeExperienceHisotryScreen === true'>
+                        <ng-template tabHeading><i class="fa fa-history" aria-hidden="true"></i> Experience
+                            History </ng-template>
+                        <app-priorexperience-list [employeeId]='employeeId'></app-priorexperience-list>
+                    </tab>
+                </tabset>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,190 @@
+<div *ngIf='leaveModulePermission?.allowed === true' class="row table-card-style">
+    <div *ngIf="filterFrm" class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <i class="fa fa-briefcase"></i><strong>Leaves</strong>&nbsp;<small>Details</small>
+                <div *ngIf='dynamicButtonsobj.Add' class="card-header-actions" style="height: 25px;">
+                    <button type="button" class="btn btn-sm btn-primary" (click)="showAddViewDialog()">
+                        <i class="fa fa-plus"></i> Add
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="callout callout-info">
+                            <form [formGroup]="filterFrm" class="form-inline">
+                                <div class="form-group">
+                                    <strong class="text-muted mr-3">Filter By: </strong>
+                                </div>
+                                <div class="form-group p-dropdownStyle mr-3" *ngIf='dynamicButtonsobj.EmployeeFilter'>
+                                    <p-dropdown formControlName="Id" [options]="employeeList" [filter]="true"
+                                        placeholder="Employee Name" [ngModel]="selectedEmployees"
+                                        (onChange)="getAllLeavesList()">
+                                    </p-dropdown>
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" size="25" class="form-control mr-3"
+                                        placeholder="-- Select Date --" bsDaterangepicker formControlName="range"
+                                        [bsConfig]="{ dateInputFormat: 'YYYY-MM-DD', containerClass: 'theme-red' }"
+                                        (ngModelChange)="getAllLeavesList()" onkeydown="return false" />
+                                </div>
+                                <div class="form-group p-dropdownStyle mr-3">
+                                    <p-dropdown formControlName="status" [options]="LeaveStatusTypes" [filter]="true"
+                                        placeholder="Status" [ngModel]="selectedLeaveStatusType"
+                                        (ngModelChange)="getAllLeavesList()">
+                                    </p-dropdown>
+                                </div>
+                                <div class="form-group">
+                                    <button type="reset" class="btn btn-sm btn-danger" (click)="clearFilter()">
+                                        <i class="fa fa-ban"></i> Reset
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="primeng-datatable">
+                    <p-table #employeeleavestable [value]="employeeSideLeaveData" [paginator]="true" [rows]="10"
+                        [showCurrentPageReport]="true" styleClass="ui-table-primedatatable" [rowHover]="true"
+                        [rowsPerPageOptions]="[10,25,50]" [filterDelay]="0"
+                        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                        [(selection)]="selectedEmployeeLeaveForCheckBox" [scrollable]="true" scrollHeight="auto"
+                        (sortFunction)="customSortForEmployeeLeavesTable($event)" [customSort]="true"
+                        [globalFilterFields]="['fullName','leaveStartDate','leaveEndDate','numberOfDays','leaveType','status','createdBy','modifiedBy']">
+                        <!-- Top bar -->
+                        <ng-template pTemplate="caption">
+                            <div class="ui-helper-clearfix" style="text-align: left">
+                                <!-- Export to excel -->
+                                <button type="button" class="btn btn-sm btn-success mr-2"
+                                    (click)="exportExcelEmployeeLeaves(selectedEmployeeLeaveForCheckBox)"
+                                    *ngIf='dynamicButtonsobj.ExportToExcel'>
+                                    <i class="fa fa-file-excel-o"></i>
+                                    EXCEL
+                                </button>
+                                <!-- Delete multiple -->
+                                <button type="button" class="btn btn-sm btn-danger"
+                                    (click)="showConfirmForDeleteEmployeeLeaves(selectedEmployeeLeaveForCheckBox)"
+                                    *ngIf='dynamicButtonsobj.MultipleDelete'>
+                                    <i class="fa fa-times"></i>&nbsp;DELETE
+                                </button>
+                                <!-- globle search -->
+                                <input type="text" class="globalSearchTxt"
+                                    (input)="employeeleavestable.filterGlobal($event.target.value, 'contains')"
+                                    placeholder="Search" />
+                            </div>
+                        </ng-template>
+                        <!-- Table Header -->
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th style="width: 2em" *ngIf='dynamicButtonsobj.MultipleDelete'>
+                                    <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                                </th>
+                                <th style="width: 5em;" *ngIf='(dynamicButtonsobj.View
+                                || dynamicButtonsobj.SingleDelete) ? true : false'>Action</th>
+                                <th pSortableColumn="leaveStartDate" style="width: 8em;">Start date
+                                    <p-sortIcon field="leaveStartDate">
+                                    </p-sortIcon>
+                                </th>
+                                <th pSortableColumn="leaveEndDate" style="width: 8em;">End date
+                                    <p-sortIcon field="leaveEndDate"></p-sortIcon>
+                                </th>
+                                <th pSortableColumn="numberOfDays" style="width: 6em;">Leaves
+                                    <p-sortIcon field="numberOfDays"></p-sortIcon>
+                                </th>
+                                <th pSortableColumn="displayNameForLeave" style="width: 6em;">Leaves For
+                                    <p-sortIcon field="displayNameForLeave"></p-sortIcon>
+                                </th>
+                                <th pSortableColumn="leaveType" style="width: 8em;">Leave type
+                                    <p-sortIcon field="leaveType"></p-sortIcon>
+                                </th>
+                                <th pSortableColumn="status" style="width: 6em;">Status
+                                    <p-sortIcon field="status"></p-sortIcon>
+                                </th>
+                                <th pSortableColumn="createdBy" style="width: 9em;">Created By
+                                    <p-sortIcon field="createdBy"></p-sortIcon>
+                                </th>
+                                <th pSortableColumn="modifiedBy" style="width: 9em;">Modified By
+                                    <p-sortIcon field="modifiedBy"></p-sortIcon>
+                                </th>
+                            </tr>
+                        </ng-template>
+                        <!-- Table row -->
+                        <ng-template pTemplate="body" let-employeeLeave>
+                            <tr>
+                                <td style="width: 2em" *ngIf='dynamicButtonsobj.MultipleDelete'>
+                                    <p-tableCheckbox [value]="employeeLeave"></p-tableCheckbox>
+                                </td>
+                                <td style="width: 5em;" *ngIf='(dynamicButtonsobj.View
+                                || dynamicButtonsobj.SingleDelete) ? true : false'>
+                                    <button type="button" class="btn btn-sm btn-info mr-1" tooltip="View"
+                                        placement="bottom" (click)="showAddViewDialog(employeeLeave)"
+                                        *ngIf='dynamicButtonsobj.View'>
+                                        <i class="fa fa-eye"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-sm btn-danger" tooltip="Delete"
+                                        placement="bottom"
+                                        (click)="showConfirmForDeleteEmployeeLeaves(employeeLeave.id)"
+                                        *ngIf='dynamicButtonsobj.SingleDelete'>
+                                        <i class="fa fa-trash-o" aria-hidden="true"></i>
+                                    </button>
+                                </td>
+                                <td style="width: 8em;">{{employeeLeave.leaveStartDate}}</td>
+                                <td style="width: 8em;">{{employeeLeave.leaveEndDate}}</td>
+                                <td style="width: 6em;">{{employeeLeave.numberOfDays}} Day</td>
+                                <td style="width: 6em;">{{employeeLeave.displayNameForLeave}}</td>
+                                <td style="width: 8em;">{{employeeLeave.leaveType }}</td>
+                                <td style="width: 6em;">
+                                    <span [class]="'datatable-badge status-' + employeeLeave.status">
+                                        {{employeeLeave.status}}
+                                    </span>
+                                </td>
+                                <td style="width: 9em;padding-left: 8px !important;text-align: left;">
+                                    {{employeeLeave.createdBy}}</td>
+                                <td style="width: 9em;padding-left: 8px !important;text-align: left;">
+                                    {{employeeLeave.modifiedBy}}</td>
+                            </tr>
+                        </ng-template>
+                        <!-- No records found -->
+                        <ng-template pTemplate="emptymessage">
+                            <tr>
+                                <td colspan="10" style="text-align:center">No records found.</td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<p-toast key="commonMsg" position="top-right" [autoZIndex]="false" [style]="{'z-index': 10001}"></p-toast>
+
+<p-toast position="center" key="deleteEmployeeLeaveKey" (onClose)="onReject()" [modal]="true" [autoZIndex]="false"
+    [style]="{'z-index': 10001}">
+    <ng-template let-message pTemplate="message">
+        <div style="text-align: center">
+            <i class="pi pi-exclamation-triangle" style="font-size: 3em"></i>
+            <h3>{{message.summary}}</h3>
+            <p>{{message.detail}}</p>
+        </div>
+        <div class="ui-g ui-fluid">
+            <div class="ui-g-6">
+                <button type="button" pButton (click)="deleteEmployeeLeaveDetails(message.data)" label="Yes"
+                    class="ui-button-success"></button>
+            </div>
+            <div class="ui-g-6">
+                <button type="button" pButton (click)="onReject()" label="No" class="ui-button-secondary"></button>
+            </div>
+        </div>
+    </ng-template>
+</p-toast>
+
+<div *ngIf='isNeedToRenderUIModal'>
+    <app-ui-modal [isNeedToRenderUIModal]='isNeedToRenderUIModal' [displayHeader]='displayHeader'
+        [UIModalStyle]="{width: '35vw'}" (closeUIModalEvent)="closeUIModal()">
+        <app-addviewemployee-leaves [addviewLeaveDetails]="addviewLeaveDetails"
+            (addEditEmployeeLeavesEvent)="closeUIModal($event)">
+        </app-addviewemployee-leaves>
+    </app-ui-modal>
+</div>

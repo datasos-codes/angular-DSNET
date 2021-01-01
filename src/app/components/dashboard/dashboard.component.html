@@ -1,0 +1,201 @@
+<app-spinner></app-spinner>
+
+<!-- Admin dashboard details start -->
+
+<div id="accordion" *ngIf="isNeedToRenderAdminData">
+
+  <div class="card">
+    <div class="card-header" id="headingEight">
+      <h5 class="mb-0">
+        <button class="btn btn-link collapsed text-decoration" data-toggle="collapse" data-target="#usersbirthday"
+          aria-expanded="false" aria-controls="usersbirthday">
+          <i class="fa fa-list"></i>&nbsp;<strong> Birthday ( Today )</strong>
+        </button>
+      </h5>
+    </div>
+    <div id="usersbirthday" [ngClass]="{'show': birthdayRes === true, 'collapse': birthdayRes === false}"
+      aria-labelledby="headingEight">
+      <div class="card-body">
+        <app-user-birthday></app-user-birthday>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header" id="dashboardHoliday">
+      <h5 class="mb-0">
+        <button class="btn btn-link collapsed text-decoration" data-toggle="collapse" data-target="#upcomingholiday"
+          aria-expanded="false" aria-controls="upcomingholiday">
+          <i class="fa fa-list"></i>&nbsp;<strong> Upcoming Holidays ( Current week - Next week )</strong>
+        </button>
+      </h5>
+    </div>
+    <div id="upcomingholiday" [ngClass]="{'show': holidayRes === true, 'collapse': holidayRes === false}"
+      aria-labelledby="dashboardHoliday">
+      <div class="card-body">
+        <app-upcoming-holiday></app-upcoming-holiday>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header" id="headingOne">
+      <h5 class="mb-0">
+        <button class="btn btn-link collapsed text-decoration" data-toggle="collapse" data-target="#collapseOne"
+          aria-expanded="false" aria-controls="collapseOne">
+          <i class="fa fa-list"></i>&nbsp;<strong> Leave Request ( Current week - Next week )</strong>
+        </button>
+      </h5>
+    </div>
+    <div id="collapseOne" [ngClass]="{'show': adminLeaveRes === true, 'collapse': adminLeaveRes === false}"
+      aria-labelledby="headingOne">
+      <div class="card-body">
+        <app-dashboard-leaverequest></app-dashboard-leaverequest>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header" id="headingTow">
+      <h5 class="mb-0">
+        <button class="btn btn-link collapsed text-decoration" data-toggle="collapse" data-target="#collapseTow"
+          aria-expanded="false" aria-controls="collapseTow">
+          <i class="fa fa-list"></i>&nbsp;<strong> Absent Employee ( Today )</strong>
+        </button>
+      </h5>
+    </div>
+    <div id="collapseTow" [ngClass]="{'show': absentEmployeeRes === true, 'collapse': absentEmployeeRes === false}"
+      aria-labelledby="headingTow">
+      <div class="card-body">
+        <app-dashboard-absentemployee></app-dashboard-absentemployee>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header" id="headingThree">
+      <h5 class="mb-0">
+        <button class="btn btn-link collapsed text-decoration" data-toggle="collapse" data-target="#collapseThree"
+          aria-expanded="false" aria-controls="collapseThree">
+          <i class="fa fa-list"></i>&nbsp;<strong> Timesheet ( Last two days )</strong>
+        </button>
+      </h5>
+    </div>
+    <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+      <div class="card-body">
+        <app-dashboard-timesheet></app-dashboard-timesheet>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header" id="headingFour">
+      <h5 class="mb-0">
+        <button class="btn btn-link collapsed text-decoration" data-toggle="collapse" data-target="#collapseFour"
+          aria-expanded="false" aria-controls="collapseFour">
+          <i class="fa fa-list"></i>&nbsp;<strong> Attendance ( Last 7 days )</strong>
+        </button>
+      </h5>
+    </div>
+    <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordion">
+      <div class="card-body">
+        <app-dashboard-attendance></app-dashboard-attendance>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Admin dashboard details end -->
+
+
+<!-- Employee dashboard details start -->
+
+<div id="accordion" *ngIf="isNeedToRenderEmployeeData">
+
+  <div class="card">
+    <div class="card-header" id="headingEight">
+      <h5 class="mb-0">
+        <button class="btn btn-link collapsed text-decoration" data-toggle="collapse" data-target="#usersbirthday"
+          aria-expanded="false" aria-controls="usersbirthday">
+          <i class="fa fa-list"></i>&nbsp;<strong> Birthday ( Today )</strong>
+        </button>
+      </h5>
+    </div>
+    <div id="usersbirthday" [ngClass]="{'show': birthdayRes === true, 'collapse': birthdayRes === false}"
+      aria-labelledby="headingEight">
+      <div class="card-body">
+        <app-user-birthday></app-user-birthday>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header" id="dashboardHoliday">
+      <h5 class="mb-0">
+        <button class="btn btn-link collapsed text-decoration" data-toggle="collapse" data-target="#upcomingholiday"
+          aria-expanded="false" aria-controls="upcomingholiday">
+          <i class="fa fa-list"></i>&nbsp;<strong> Upcoming Holidays ( Current week - Next week )</strong>
+        </button>
+      </h5>
+    </div>
+    <div id="upcomingholiday" [ngClass]="{'show': holidayRes === true, 'collapse': holidayRes === false}"
+      aria-labelledby="dashboardHoliday">
+      <div class="card-body">
+        <app-upcoming-holiday></app-upcoming-holiday>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header" id="headingFive">
+      <h5 class="mb-0">
+        <button class="btn btn-link collapsed text-decoration" data-toggle="collapse" data-target="#collapseFive"
+          aria-expanded="false" aria-controls="collapseFive">
+          <i class="fa fa-list"></i>&nbsp;<strong> Leave Request ( Current Month )</strong>
+        </button>
+      </h5>
+    </div>
+    <div id="collapseFive" [ngClass]="{'show': employeeLeaveRes === true, 'collapse': employeeLeaveRes === false}"
+      aria-labelledby="headingFive">
+      <div class="card-body">
+        <app-employee-dashboard-leave></app-employee-dashboard-leave>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header" id="headingSix">
+      <h5 class="mb-0">
+        <button class="btn btn-link collapsed text-decoration" data-toggle="collapse" data-target="#collapseSix"
+          aria-expanded="false" aria-controls="collapseSix">
+          <i class="fa fa-list"></i>&nbsp;<strong> Timesheet ( Last day ) </strong>
+        </button>
+      </h5>
+    </div>
+    <div id="collapseSix" class="collapse" aria-labelledby="headingSix" data-parent="#accordion">
+      <div class="card-body">
+        <app-employee-dashboard-timesheet></app-employee-dashboard-timesheet>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header" id="headingSeven">
+      <h5 class="mb-0">
+        <button class="btn btn-link collapsed text-decoration" data-toggle="collapse" data-target="#collapseSeven"
+          aria-expanded="false" aria-controls="collapseSeven">
+          <i class="fa fa-list"></i>&nbsp;<strong> Attendance ( Current week )</strong>
+        </button>
+      </h5>
+    </div>
+    <div id="collapseSeven" class="collapse" aria-labelledby="headingSeven" data-parent="#accordion">
+      <div class="card-body">
+        <app-employee-dashboard-attendance></app-employee-dashboard-attendance>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Employee dashboard details end -->

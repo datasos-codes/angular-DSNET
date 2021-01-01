@@ -1,0 +1,70 @@
+<div class="primeng-datatable">
+    <p-table #employeeDashboardTimesheetTable [value]="employeeTimeSheetData" [paginator]="true" [rows]="10"
+        [showCurrentPageReport]="true" styleClass="ui-table-primedatatable" [rowHover]="true"
+        [rowsPerPageOptions]="[10,25,50]" [filterDelay]="0"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [scrollable]="true"
+        scrollHeight="auto" (sortFunction)="customSortForEmployeeDashboardTimesheetTable($event)" [customSort]="true"
+        [globalFilterFields]="['date','projectName','task','billableHours','nonBillableHours','status','createdBy','modifiedBy']">
+        <!-- Top bar -->
+        <ng-template pTemplate="caption">
+            <div class="ui-helper-clearfix" style="text-align: left">
+                <!-- globle search -->
+                <input type="text" class="globalSearchTxt"
+                    (input)="employeeDashboardTimesheetTable.filterGlobal($event.target.value, 'contains')"
+                    placeholder="Search" />
+            </div>
+        </ng-template>
+        <!-- Table Header -->
+        <ng-template pTemplate="header">
+            <tr>
+                <th pSortableColumn="date" style="width: 7em;">Date
+                    <p-sortIcon field="date"></p-sortIcon>
+                </th>
+                <th pSortableColumn="projectName" style="width: 8em;">Project
+                    <p-sortIcon field="projectName"></p-sortIcon>
+                </th>
+                <th pSortableColumn="task" style="width: 8em;">Task
+                    <p-sortIcon field="task"></p-sortIcon>
+                </th>
+                <th pSortableColumn="billableHours" style="width: 8em;">Billable hours
+                    <p-sortIcon field="billableHours"></p-sortIcon>
+                </th>
+                <th pSortableColumn="nonBillableHours" style="width: 10em;">Non billable hours
+                    <p-sortIcon field="nonBillableHours"></p-sortIcon>
+                </th>
+                <th pSortableColumn="status" style="width: 6em;">Status
+                    <p-sortIcon field="status"></p-sortIcon>
+                </th>
+                <th pSortableColumn="createdBy" style="width: 9em;">Created By
+                    <p-sortIcon field="createdBy"></p-sortIcon>
+                </th>
+                <th pSortableColumn="modifiedBy" style="width: 9em;">Modified By
+                    <p-sortIcon field="modifiedBy"></p-sortIcon>
+                </th>
+            </tr>
+        </ng-template>
+        <!-- Table row -->
+        <ng-template pTemplate="body" let-employeeTimeSheet>
+            <tr>
+                <td style="width: 7em;">{{employeeTimeSheet.date}}</td>
+                <td style="width: 8em;">{{employeeTimeSheet.projectName}}</td>
+                <td style="width: 8em;">{{employeeTimeSheet.task}}</td>
+                <td style="width: 8em;">{{employeeTimeSheet.billableHours}}</td>
+                <td style="width: 10em;">{{employeeTimeSheet.nonBillableHours}}</td>
+                <td style="width: 6em;">
+                    <span [class]="'datatable-badge status-' + employeeTimeSheet.status">
+                        {{employeeTimeSheet.status}}
+                    </span>
+                </td>
+                <td style="width: 9em;text-align: left;padding-left: 8px !important;">{{employeeTimeSheet.createdBy}}</td>
+                <td style="width: 9em;text-align: left;padding-left: 8px !important;">{{employeeTimeSheet.modifiedBy}}</td>
+            </tr>
+        </ng-template>
+        <!-- No records found -->
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="8" style="text-align:center">No records found.</td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>

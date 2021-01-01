@@ -1,0 +1,113 @@
+<div *ngIf="editPermisstionFrm">
+    <form [formGroup]="editPermisstionFrm">
+        <div class="row">
+            <div class="form-group  col-lg-4">
+                <label>Role :</label>
+                <input type="text" class="form-control" formControlName="roleName"
+                    [ngModel]='permissionsRequestObj.roleName' name="name" placeholder="Enter role name"
+                    [ngClass]="{ 'is-invalid': submitted && f.roleName.errors }" disabled>
+                <div *ngIf="submitted && f.roleName.errors" class="validationErrorMsg">
+                    <div *ngIf="f.roleName.errors.required">Role is required.</div>
+                </div>
+            </div>
+            <div class="form-group  col-lg-8">
+                <label>Description<span class="asteriskRequiredColor">*</span> :</label>
+                <textarea type="text" class="form-control textarea-size" formControlName="roleDescription"
+                    [ngModel]='permissionsRequestObj.roleDescription' name="roleDescription"
+                    placeholder="Enter role description" rows="2" cols="2"
+                    [ngClass]="{ 'is-invalid': submitted && f.roleDescription.errors }"></textarea>
+                <div *ngIf="submitted && f.roleDescription.errors" class="validationErrorMsg">
+                    <div *ngIf="f.roleDescription.errors.required">Description is required.</div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="card card-accent-primary tableBottom permissionInerButtons">
+                <div formArrayName="permissions" >
+                    <p-table #testTable [columns]="cols" [value]="permissionsRequestObj.permissions" dataKey="featureId"
+                        [showCurrentPageReport]="true" styleClass="ui-table-primedatatable" [rowHover]="true"
+                        [scrollable]="true" scrollHeight="200px">
+                        <ng-template pTemplate="caption">
+                            <div class="ui-helper-clearfix" style="text-align: left">
+                                <label>Role Permission</label>
+                            </div>
+                        </ng-template>
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th style="width: 3em"></th>
+                                <th style="width: 6em">Allowed</th>
+                                <th style="width: 15em;">Screen</th>
+                                <th style="width: 10em;">Title</th>
+                                <th style="width: 15em;">Description</th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-rolePermission let-expanded="expanded" let-columns="columns"
+                            let-rowIndex="rowIndex">
+                            <tr [formGroupName]="rowIndex">
+                                <td style="width: 3em">
+                                    <a href="#" [pRowToggler]="rolePermission">
+                                        <i [ngClass]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></i>
+                                    </a>
+                                </td>
+                                <td style="width: 6em">
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input"
+                                            id="{{permissionsRequestObj.roleName}}_{{rolePermission.featureId}}"
+                                            formControlName="allowed" [ngModel]="rolePermission.allowed">
+                                        <label class="custom-control-label"
+                                            for="{{permissionsRequestObj.roleName}}_{{rolePermission.featureId}}"></label>
+                                    </div>
+                                </td>
+                                <td style="width: 15em;">{{ rolePermission.featureName }}</td>
+                                <td style="width: 10em;">{{ rolePermission.featureTitle }}</td>
+                                <td style="width: 15em;">{{ rolePermission.featureDescription }}</td>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="rowexpansion" let-rolePermission let-columns="columns"
+                            let-rowIndex="rowIndex">
+                            <tr [formGroupName]="rowIndex" style="text-align: center;">
+                                <td [attr.colspan]="columns.length + 1" style="padding-left: 22px !important;">
+                                    <!-- Working code start index issue -->
+                                    <div class="row" *ngIf='rolePermission.features.length > 0; else noRecordFound'>
+                                        <div *ngFor='let data of rolePermission.features;let j="index"'>
+                                            <div class="ui-g ui-fluid">
+                                                <div class="ui-g-12" style="text-align:center">
+                                                    <div class="ui-g">
+                                                        <div class="ui-g-12" style="padding: 0;">
+                                                            <div class="custom-control custom-checkbox">
+                                                                <input type="checkbox" class="custom-control-input"
+                                                                    id="{{j}}_{{rolePermission.featureId}}"
+                                                                    [checked]='data.isLableValue'
+                                                                    (change)="onChange(data,  rolePermission.featureId, $event.target.checked)">
+                                                                <label class="custom-control-label"
+                                                                    for="{{j}}_{{rolePermission.featureId}}">
+                                                                    <strong>{{data.isLableDisplay}}</strong>
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <ng-template #noRecordFound>
+                                        <span colspan="6" style="text-align:center">No records found.</span>
+                                    </ng-template>
+                                    <!-- Working code end index issue -->
+                                </td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </div>
+            </div>
+        </div>
+
+        <button *ngIf="!loading" type="submit" class="btn btn-sm btn-primary m-1" (click)="onSubmitUpdatePermissions()">
+            <span><i class="fa fa-dot-circle-o"></i>&nbsp;Save</span>
+        </button>
+        <button *ngIf="loading" class="btn btn-sm btn-primary m-1" color="primary" type="button" disabled>
+            <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+            <span>Loading...</span>
+        </button>
+    </form>
+</div>

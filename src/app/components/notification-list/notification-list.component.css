@@ -1,0 +1,39 @@
+.display-item-list {
+    display      : block;
+    overflow     : hidden;
+    white-space  : nowrap;
+    text-overflow: ellipsis;
+}
+
+.notification-options {
+    overflow-y: scroll;
+    height    : 130px;
+    width     : 512px;
+}
+
+.rejectedLeaeve {
+    color: #f86c6b;
+}
+
+.accepptedLeaeve {
+    color: #4dbd74;
+}
+
+.pendingLeaeve {
+    color: #63c2de;
+}
+
+.no-notification-options {
+    height : 80px;
+    width  : 250px;
+    padding: 25px;
+}
+
+.clearall {
+    cursor: pointer;
+    color : white !important;
+}
+
+.notificationLable {
+    font-size: 15px !important;
+}

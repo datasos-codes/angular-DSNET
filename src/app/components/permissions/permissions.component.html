@@ -1,0 +1,90 @@
+<app-spinner></app-spinner>
+<div class="row table-card-style">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <i class="fa fa-calendar"></i><strong>Permissions</strong>&nbsp;<small>Details</small>
+            </div>
+            <div class="card-body">
+                <div class="primeng-datatable">
+                    <p-table #permissionsTable [value]="permissionsData" [paginator]="true" [rows]="10"
+                        [showCurrentPageReport]="true" styleClass="ui-table-primedatatable" [rowHover]="true"
+                        [rowsPerPageOptions]="[10,25,50]" [filterDelay]="0"
+                        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                        [scrollable]="true" scrollHeight="450px"
+                        [globalFilterFields]="['id','name','description','isActive','createdBy','modifiedBy']">
+                        <!-- Top bar -->
+                        <ng-template pTemplate="caption">
+                            <div class="ui-helper-clearfix" style="text-align: left">
+                                <!-- globle search -->
+                                <input type="text" class="globalSearchTxt"
+                                    (input)="permissionsTable.filterGlobal($event.target.value, 'contains')"
+                                    placeholder="Search" />
+                            </div>
+                        </ng-template>
+                        <!-- Table Header -->
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th style="width: 3em;">Action</th>
+                                <th pSortableColumn="name" style="width: 6em;">Role
+                                    <p-sortIcon field="name"></p-sortIcon>
+                                </th>
+                                <th pSortableColumn="description" style="width: 10em;">Description
+                                    <p-sortIcon field="description"></p-sortIcon>
+                                </th>
+                                <th pSortableColumn="isActive" style="width: 5em;">Status
+                                    <p-sortIcon field="isActive"></p-sortIcon>
+                                </th>
+                                <th pSortableColumn="createdBy" style="width: 7em;">Created By
+                                    <p-sortIcon field="createdBy"></p-sortIcon>
+                                </th>
+                                <th pSortableColumn="modifiedBy" style="width: 7em;">Modified By
+                                    <p-sortIcon field="modifiedBy"></p-sortIcon>
+                                </th>
+                            </tr>
+                        </ng-template>
+                        <!-- Table row -->
+                        <ng-template pTemplate="body" let-permission>
+                            <tr>
+                                <td style="width: 3em;">
+                                    <button type="button" class="btn btn-sm btn-primary" tooltip="Edit"
+                                        placement="bottom" (click)="openAddEditDialog(permission)">
+                                        <i class="fa fa-edit"></i>
+                                    </button>
+                                </td>
+                                <td style="width: 6em;">{{permission.name}}</td>
+                                <td style="width: 10em;padding-left: 8px !important;text-align: left;">
+                                    {{permission.description}}</td>
+                                <td style="width: 5em;">
+                                    <span [class]="'datatable-badge status-' + permission.isActive">
+                                        {{permission.isActive}}
+                                    </span>
+                                </td>
+                                <td style="width: 7em;padding-left: 8px !important;text-align: left;">
+                                    {{permission.createdBy}}</td>
+                                <td style="width: 7em;padding-left: 8px !important;text-align: left;">
+                                    {{permission.modifiedBy}}</td>
+                            </tr>
+                        </ng-template>
+                        <!-- No records found -->
+                        <ng-template pTemplate="emptymessage">
+                            <tr>
+                                <td colspan="6" style="text-align:center">No records found.</td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<p-toast key="commonMsg" position="top-right"  [autoZIndex]="false"   [style]="{'z-index': 10001}"></p-toast>
+
+<div *ngIf='isNeedToRenderUIModal'>
+    <app-ui-modal [isNeedToRenderUIModal]='isNeedToRenderUIModal' [displayHeader]='displayHeader'
+        [UIModalStyle]="{width: '55vw'}" (closeUIModalEvent)="closeUIModal()">
+        <app-editpermisstion [permissionListObj]="permissionListObj" (closePermissionUIModalEvent)='closeUIModal()'>
+        </app-editpermisstion>
+    </app-ui-modal>
+</div>

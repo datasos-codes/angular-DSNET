@@ -1,0 +1,50 @@
+<a class="nav-link" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"
+    dropdownToggle (click)="false">
+    <i class="icon-bell" style="font-size:18px"></i><span class="badge badge-pill badge-danger">
+        {{NotificationCount ? NotificationCount : '0'}}
+    </span>
+</a>
+<div class="dropdown-menu dropdown-menu-right" *dropdownMenu aria-labelledby="simple-dropdown">
+    <div class="dropdown-header text-center" style="position: static;top:0;z-index: 1000;width: 100% !important;">
+        <div *ngIf="notificationArr && notificationArr.length > 0">
+            <div class="row">
+                <div class="col-sm-6 notificationLable">
+                    <strong>Notifications</strong>
+                </div>
+                <div class="col-sm-6 text-center">
+                    <button type="button" class="btn btn-sm btn-pill btn-danger clearall" (click)="clearAllNotifications()">Clear All</button>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="notificationArr && notificationArr.length === 0">
+            <strong>Notifications</strong>
+        </div>
+    </div>
+    <div *ngIf="notificationArr && notificationArr.length === 0" class="text-center no-notification-options">
+        No new notification.
+    </div>
+    <div *ngIf="notificationArr && notificationArr.length > 0" class="notification-options">
+        <a class="dropdown-item display-item-list" href="#" *ngFor="let notification of notificationArr">
+            <div (click)="navigateOnHolidayDetails(notification.id,$event)" *ngIf="notification.typeId == 'holiday'">
+                <strong>{{notification.title}}</strong> {{notification.typeId}}
+                <b>{{ notification.startDate }} </b> {{notification.startDate ? 'to' : ''}}
+                <b>{{ notification.endDate }}</b> {{ notification.endDate ? 'is' : ''}}
+                <span
+                    [ngClass]="{'rejectedLeaeve':notification.description == 'deleted.','accepptedLeaeve':notification.description == 'updated.'}">
+                    {{notification.description}}
+                </span>
+            </div>
+            <div (click)="navigateOnLeaveDetails(notification.id,$event)" *ngIf="notification.typeId == 'leave'">
+                <strong>{{notification.fullName ? notification.fullName : ''}}</strong>
+                {{ notification.fullName ? 'your' : ''}} {{ notification.typeId}}
+                <b>{{ notification.startDate }} </b> {{notification.startDate ? 'to' : ''}}
+                <b>{{ notification.endDate }}</b> {{ notification.endDate ? 'is' : ''}}
+                <span [ngClass]="{'rejectedLeaeve':notification.description == 'rejected.',
+                    'pendingLeaeve':notification.description == 'pending.',
+                    'accepptedLeaeve':notification.description == 'accepted.'}">
+                    {{notification.description}}
+                </span>
+            </div>
+        </a>
+    </div>
+</div>

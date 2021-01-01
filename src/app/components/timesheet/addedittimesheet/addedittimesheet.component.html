@@ -1,0 +1,166 @@
+<form [formGroup]="addEditTimeSheetFrm" (ngSubmit)="onSubmitaddEditTimeSheetFrm()">
+    <div class="form-group">
+        <div class="row">
+            <div class="col-md-4">
+                <label>Select Date<span class="asteriskRequiredColor">*</span> :</label>
+                <input type="text" class="form-control" placeholder="Select Date" bsDatepicker formControlName="tDate"
+                    [ngClass]="{ 'is-invalid': submitted && f.tDate.errors }" onkeydown="return false"
+                    [ngModel]="timeSheetObj.tDate" [daysDisabled]="[0]"
+                    [bsConfig]="{ dateInputFormat: 'YYYY-MM-DD', containerClass: 'theme-red' }" />
+                <div *ngIf="submitted && f.tDate.errors" class="validationErrorMsg">
+                    <div *ngIf="f.tDate.errors.required">Date is required.</div>
+                </div>
+            </div>
+            <div class="col-md-4 p-dropdownStyle">
+                <label>Select Employee<span class="asteriskRequiredColor">*</span> :</label>
+                <p-dropdown formControlName="employeeId" [style]="{'width':'100%'}" [options]="employeeData"
+                    [filter]="true" placeholder="Employee name" [ngModel]="timeSheetObj.employeeId"
+                    [ngClass]="{ 'is-invalid': submitted && f.employeeId.errors }">
+                </p-dropdown>
+                <div *ngIf="submitted && f.employeeId.errors" class="validationErrorMsg">
+                    <div *ngIf="f.employeeId.errors.required">Employee is required</div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <label>Invoice :</label>
+                <input type="text" formControlName="invoiceId" name="invoiceId" class="form-control"
+                    [ngModel]="timeSheetObj.invoiceId" placeholder="Enter Invoice"
+                    [ngClass]="{ 'is-invalid': submitted && f.invoiceId.errors }" (keypress)="onlyNumberKey($event)"
+                    onpaste="return false">
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="row">
+            <div class="col-md-4 p-dropdownStyle">
+                <label>Select Project<span class="asteriskRequiredColor">*</span> :</label>
+                <p-dropdown formControlName="projectId" [style]="{'width':'100%'}" [options]="projectsData"
+                    [filter]="true" placeholder="Project name" [ngModel]="timeSheetObj.projectId"
+                    [ngClass]="{ 'is-invalid': submitted && f.projectId.errors }"
+                    (onChange)='fetchModuleBasedOnProject($event.value)'>
+                </p-dropdown>
+                <div *ngIf="submitted && f.projectId.errors" class="validationErrorMsg">
+                    <div *ngIf="f.projectId.errors.required">Project is required</div>
+                </div>
+            </div>
+            <div class="col-md-4 p-dropdownStyle">
+                <label>Module<span class="asteriskRequiredColor">*</span> :</label>
+                <p-dropdown formControlName="moduleId" [style]="{'width':'100%'}" [options]="testData" [filter]="true"
+                    placeholder="Module Name" [ngModel]="timeSheetObj.moduleId === 0 ? '' : timeSheetObj.moduleId"
+                    [ngClass]="{ 'is-invalid': submitted && f.moduleId.errors }">
+                </p-dropdown>
+                <div *ngIf="submitted && f.moduleId.errors" class="validationErrorMsg">
+                    <div *ngIf="f.moduleId.errors.required">Module is required</div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <label>Task Name<span class="asteriskRequiredColor">*</span> :</label>
+                <input type="text" formControlName="task" name="Task" class="form-control" placeholder="Enter Task Name"
+                    [ngModel]="timeSheetObj.task" [ngClass]="{ 'is-invalid': submitted && f.task.errors }">
+                <div *ngIf="submitted && f.task.errors" class="validationErrorMsg">
+                    <div *ngIf="f.task.errors.required">Task Name is required</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="row">
+            <div class="col-md-4">
+                <label>Billable Hour :</label>
+                <input type="text" formControlName="billableHours" name="billableHours" class="form-control"
+                    [ngModel]="timeSheetObj.billableHours" placeholder="(Ex: 1/1.5)"
+                    [ngClass]="{ 'is-invalid': submitted && f.billableHours.errors }" maxlength="5">
+                <div *ngIf="submitted && f.billableHours.errors" class="validationErrorMsg">
+                    <div *ngIf="f.billableHours.errors.pattern">Invalid input.</div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <label>Non Billable Hour :</label>
+                <input type="text" formControlName="nonBillableHours" name="nonBillableHours" class="form-control"
+                    placeholder="(Ex: 0/1.5)" [ngModel]="timeSheetObj.nonBillableHours"
+                    [ngClass]="{ 'is-invalid': submitted && f.nonBillableHours.errors }" maxlength="5">
+                <div *ngIf="submitted && f.nonBillableHours.errors" class="validationErrorMsg">
+                    <div *ngIf="f.nonBillableHours.errors.pattern">Invalid input.
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <label>Approved Hour :</label>
+                <input type="text" formControlName="approvedHours" name="approvedHours" class="form-control"
+                    placeholder="(Ex: 1/1.5)" [ngModel]="timeSheetObj.approvedHours"
+                    [ngClass]="{ 'is-invalid': submitted && f.approvedHours.errors }" onpaste="return false"
+                    maxlength="5">
+                <div *ngIf="submitted && f.approvedHours.errors" class="validationErrorMsg">
+                    <div *ngIf="f.approvedHours.errors.pattern">Invalid input.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="row">
+            <div class="col-md-4 p-dropdownStyle">
+                <label>Status :</label>
+                <p-dropdown formControlName="isActive" [style]="{'width':'100%'}" [options]="IsActiveTypes"
+                    [filter]="true" [ngModel]="timeSheetObj.isActive ? timeSheetObj.isActive : selectedIsActiveType"
+                    [ngClass]="{ 'is-invalid': submitted && f.isActive.errors }">
+                </p-dropdown>
+                <div *ngIf="submitted && f.isActive.errors" class="validationErrorMsg">
+                    <div *ngIf="f.isActive.errors.required">Status is required.</div>
+                </div>
+            </div>
+            <div class="col-md-4 timePickerStyle">
+                <label>Start Time<span class="asteriskRequiredColor">*</span> :</label>
+                <p-calendar class="timePickerInputtext" [timeOnly]="true" [style]="{'width':'100%'}" hourFormat="12"
+                    [inputStyle]="{'width':'100%'}" placeholder="Start Time" formControlName="TstartTime"
+                    [ngModel]="timeSheetObj.TstartTime">
+                </p-calendar>
+                <div *ngIf="submitted && f.TstartTime.errors" class="validationErrorMsg">
+                    <div *ngIf="f.TstartTime.errors.required">Start time is required.</div>
+                </div>
+            </div>
+            <div class="col-md-4 timePickerStyle">
+                <label>Finish Time<span class="asteriskRequiredColor">*</span> :</label>
+                <p-calendar class="timePickerInputtext" [timeOnly]="true" [style]="{'width':'100%'}" hourFormat="12"
+                    [inputStyle]="{'width':'100%'}" placeholder="Finish Time" formControlName="TfinishTime"
+                    [ngModel]="timeSheetObj.TfinishTime">
+                </p-calendar>
+                <div *ngIf="submitted && f.TfinishTime.errors" class="validationErrorMsg">
+                    <div *ngIf="f.TfinishTime.errors.required">Finish time is required.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="row">
+            <div class="col-md-6">
+                <label>Description<span class="asteriskRequiredColor">*</span> :</label>
+                <textarea type="text" class="form-control textarea-size" formControlName="description"
+                    name="description" placeholder="Enter Description" rows="3" cols="3"
+                    [ngModel]="timeSheetObj.description"
+                    [ngClass]="{ 'is-invalid': submitted && f.description.errors }"></textarea>
+                <div *ngIf="submitted && f.description.errors" class="validationErrorMsg">
+                    <div *ngIf="f.description.errors.required">Description is required.</div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <label>Remark<span class="asteriskRequiredColor">*</span> :</label>
+                <textarea type="text" class="form-control textarea-size" formControlName="remark" name="remark"
+                    placeholder="Enter Remark" rows="3" cols="3" [ngModel]="timeSheetObj.remark"
+                    [ngClass]="{ 'is-invalid': submitted && f.remark.errors }">
+                </textarea>
+                <div *ngIf="submitted && f.remark.errors" class="validationErrorMsg">
+                    <div *ngIf="f.remark.errors.required">Remark is required.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="">
+        <button *ngIf="!loading" type="submit" class="btn btn-sm btn-primary m-1">
+            <span><i class="fa fa-dot-circle-o"></i>&nbsp;Save</span>
+        </button>
+        <button *ngIf="loading" class="btn btn-sm btn-primary m-1" color="primary" type="button" disabled>
+            <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+            <span>Loading...</span>
+        </button>
+    </div>
+</form>

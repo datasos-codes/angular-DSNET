@@ -1,0 +1,114 @@
+<form [formGroup]="addEditEmployeeLeavesFrm" (ngSubmit)="onSubmitAddEditEmployeeLeavesFrm()" *ngIf="viewLeave == false">
+    <div class="row">
+        <div class="form-group col-md-6">
+            <label>Leave start date - end date<span class="asteriskRequiredColor">*</span> :</label>
+            <input type="text" class="form-control" placeholder="Leave start date - end date" bsDaterangepicker
+                formControlName="range" [ngModel]='employeeLeavesObj.range' onkeydown="return false"
+                (bsValueChange)="countTotalNumberOfLeaves($event)"
+                [ngClass]="{ 'is-invalid': submitted && f.range.errors }"
+                [bsConfig]="{ dateInputFormat: 'YYYY-MM-DD', containerClass: 'theme-red' }" />
+            <div *ngIf="submitted && f.range.errors" class="validationErrorMsg">
+                <div *ngIf="f.range.errors.required">Leave start date - end date is required.</div>
+            </div>
+        </div>
+        <div class="form-group col-md-6 p-dropdownStyle">
+            <label>Leave Type :</label>
+            <p-dropdown formControlName="leaveType" [options]="LeaveTypes" [filter]="true"
+                [ngModel]="employeeLeavesObj.leaveType ? employeeLeavesObj.leaveType : selectedLeaveType"
+                [ngClass]="{ 'is-invalid': submitted && f.leaveType.errors }">
+            </p-dropdown>
+            <div *ngIf="submitted && f.leaveType.errors" class="validationErrorMsg">
+                <div *ngIf="f.leaveType.errors.required">Leave type is required.</div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-md-6" *ngIf='isNeedToRenderLeaveTotal'>
+            <label>Total leave (In days):</label>
+            <input type="text" class="form-control" disabled formControlName="numberOfDays"
+                [ngModel]='employeeLeavesObj?.numberOfDays' />
+        </div>
+        <div class="col-md-6 p-dropdownStyle" *ngIf='isNeedToRenderLeaveFor'>
+            <label>Leave For :</label>
+            <p-dropdown formControlName="leaveFor" [style]="{'width':'100%'}" [options]="LeaveForTypes" [filter]="true"
+                [ngModel]="employeeLeavesObj.leaveFor ? employeeLeavesObj.leaveFor : selectedLeaveForType"
+                [ngClass]="{ 'is-invalid': submitted && f.leaveFor.errors }">
+            </p-dropdown>
+            <div *ngIf="submitted && f.leaveFor.errors" class="validationErrorMsg">
+                <div *ngIf="f.leaveFor.errors.required">Leave for is required.</div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-md-6">
+            <label>Reason<span class="asteriskRequiredColor">*</span> :</label>
+            <textarea type="text" class="form-control textarea-size" formControlName="reason"
+                [ngModel]='employeeLeavesObj.reason' name="reason" placeholder="Enter reason"
+                [ngClass]="{ 'is-invalid': submitted && f.reason.errors }"></textarea>
+            <div *ngIf="submitted && f.reason.errors" class="validationErrorMsg">
+                <div *ngIf="f.reason.errors.required">Reason is required.</div>
+            </div>
+        </div>
+        <div class="form-group col-md-6">
+            <label>Remark :</label>
+            <textarea type="text" class="form-control textarea-size" formControlName="remark"
+                [ngModel]='employeeLeavesObj.remark' name="remark" placeholder="Enter remark"
+                [ngClass]="{ 'is-invalid': submitted && f.remark.errors }"></textarea>
+        </div>
+    </div>
+    <div class="">
+        <button *ngIf="!loading" type="submit" class="btn btn-sm btn-primary m-1">
+            <span><i class="fa fa-dot-circle-o"></i>&nbsp;Save</span>
+        </button>
+        <button *ngIf="loading" class="btn btn-sm btn-primary m-1" color="primary" type="button" disabled>
+            <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+            <span>Loading...</span>
+        </button>
+    </div>
+</form>
+
+<!-- View Employee Leave -->
+<div class="wrapper" *ngIf="viewLeave == true">
+    <div class="row" style="margin: 0 !important;">
+        <div class="form-group col-md-12">
+            <div class="row" style="margin-bottom: 0.3rem !important;">
+                <b> Start date : </b> &nbsp; {{employeeLeavesObj.leaveStartDate}}
+            </div>
+            <div class="row" style="margin-bottom: 0.3rem !important;">
+                <b> End date : </b> &nbsp; {{employeeLeavesObj.leaveEndDate}}
+            </div>
+            <div class="row" style="margin-bottom: 0.3rem !important;">
+                <b> Leaves : </b> &nbsp; {{employeeLeavesObj.numberOfDays}} Day
+            </div>
+            <div class="row" style="margin-bottom: 0.3rem !important;">
+                <b> Leave type : </b> &nbsp; {{employeeLeavesObj.leaveType}}
+            </div>
+            <div class="row" style="margin-bottom: 0.3rem !important;">
+                <b> Created By : </b> &nbsp; {{employeeLeavesObj.createdBy}}
+            </div>
+            <div class="row" style="margin-bottom: 0.3rem !important;">
+                <b> Modified By : </b> &nbsp; {{employeeLeavesObj.modifiedBy}}
+            </div>
+            <div class="row" style="margin-bottom: 0.3rem !important;">
+                <b> Leave For : </b> &nbsp; <span>{{employeeLeavesObj.leaveFor}}</span>
+            </div>
+            <div class="row" style="margin-bottom: 0.3rem !important;">
+                <b>Status :</b> &nbsp;
+                <span [class]="'datatable-badge status-' + employeeLeavesObj.status">
+                    {{employeeLeavesObj.status}}
+                </span>
+            </div>
+            <div class="row" style="margin-bottom: 0.3rem !important;">
+                <b> Reason : </b> &nbsp;
+                <span>
+                    {{employeeLeavesObj.reason}}
+                </span>
+            </div>
+            <div class="row" style="margin-bottom: 0.3rem !important;">
+                <b> Remark : </b> &nbsp; <span>
+                    {{employeeLeavesObj.remark}}
+                </span>
+            </div>
+        </div>
+    </div>
+</div>

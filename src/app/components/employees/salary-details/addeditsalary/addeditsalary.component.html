@@ -1,0 +1,86 @@
+<form [formGroup]="empAddEditSalaryFrm" (ngSubmit)="onSubmitEmpAddEditSalaryFrm()">
+    <div class="row">
+        <div class="form-group col-sm-6">
+            <label>Salary Amount<span class="asteriskRequiredColor">*</span> :</label>
+            <input type="text" class="form-control" formControlName="salaryAmount" placeholder="Enter salary amount"
+                [ngClass]="{ 'is-invalid': submitted && f.salaryAmount.errors }" [ngModel]='employeeSalary.salaryAmount'
+                (keypress)="onlyNumberKey($event)" onpaste="return false">
+            <div *ngIf="submitted && f.salaryAmount.errors" class="validationErrorMsg">
+                <div *ngIf="f.salaryAmount.errors.required">Salary amount is required.</div>
+            </div>
+        </div>
+        <div class="form-group col-sm-6">
+            <label>Retention Bonus<span class="asteriskRequiredColor">*</span> :</label>
+            <input type="text" class="form-control" formControlName="retentionBonusPerMonth"
+                placeholder="Enter retention bonus"
+                [ngClass]="{ 'is-invalid': submitted && f.retentionBonusPerMonth.errors }"
+                [ngModel]='employeeSalary.retentionBonusPerMonth' (keypress)="onlyNumberKey($event)"
+                onpaste="return false">
+            <div *ngIf="submitted && f.retentionBonusPerMonth.errors" class="validationErrorMsg">
+                <div *ngIf="f.retentionBonusPerMonth.errors.required">Retention Bonus is required.</div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-sm-6">
+            <label>Salary start date - end date<span class="asteriskRequiredColor">*</span> :</label>
+            <input type="text" class="form-control" placeholder="Salary start date - end date" bsDaterangepicker
+                formControlName="range" [ngModel]='employeeSalary.range' onkeydown="return false"
+                [ngClass]="{ 'is-invalid': submitted && f.range.errors }"
+                [bsConfig]="{ dateInputFormat: 'YYYY-MM-DD', containerClass: 'theme-red' }" />
+            <div *ngIf="submitted && f.range.errors" class="validationErrorMsg">
+                <div *ngIf="f.range.errors.required">Salary start date - end date is required.</div>
+            </div>
+        </div>
+        <div class="form-group col-sm-6">
+            <label>Retention Bonus Payment<span class="asteriskRequiredColor">*</span> :</label>
+            <input type="text" class="form-control" formControlName="retentionBonusPayment"
+                placeholder="Enter retention bonus payment"
+                [ngClass]="{ 'is-invalid': submitted && f.retentionBonusPayment.errors }"
+                [ngModel]='employeeSalary.retentionBonusPayment' (keypress)="onlyNumberKey($event)"
+                onpaste="return false">
+            <div *ngIf="submitted && f.retentionBonusPayment.errors" class="validationErrorMsg">
+                <div *ngIf="f.retentionBonusPayment.errors.required">Retention bonus payment is required.</div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="row">
+            <div class="col-md-6 p-dropdownStyle">
+                <label>Bonus Month :</label>
+                <p-dropdown formControlName="retentionPaymentSalaryMonth" [options]="monthArr" [filter]="true"
+                    [ngModel]="employeeSalary.retentionPaymentSalaryMonth">
+                </p-dropdown>
+            </div>
+            <div class="col-md-6 p-dropdownStyle">
+                <label>Apprisal Month :</label>
+                <p-dropdown formControlName="nextAppraisalSalaryMonth" [options]="monthArr" [filter]="true"
+                    [ngModel]="employeeSalary.nextAppraisalSalaryMonth">
+                </p-dropdown>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="row">
+            <div class="col-md-6 p-dropdownStyle">
+                <label>Status :</label>
+                <p-dropdown formControlName="isActive" [style]="{'width':'100%'}" [options]="IsActiveTypes"
+                    [filter]="true" [ngModel]="employeeSalary.isActive ? employeeSalary.isActive : selectedIsActiveType"
+                    [ngClass]="{ 'is-invalid': submitted && f.isActive.errors }">
+                </p-dropdown>
+                <div *ngIf="submitted && f.isActive.errors" class="validationErrorMsg">
+                    <div *ngIf="f.isActive.errors.required">Status is required.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="">
+        <button *ngIf="!loading" type="submit" class="btn btn-sm btn-primary m-1">
+            <span><i class="fa fa-dot-circle-o"></i>&nbsp;Save</span>
+        </button>
+        <button *ngIf="loading" class="btn btn-sm btn-primary m-1" color="primary" type="button" disabled>
+            <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+            <span>Loading...</span>
+        </button>
+    </div>
+</form>

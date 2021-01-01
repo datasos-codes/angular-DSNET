@@ -1,0 +1,68 @@
+<form [formGroup]="addEditProjectFrm" (ngSubmit)="onSubmitaddEditProjectFrm()">
+    <div class="row">
+        <div class="form-group col-sm-6">
+            <label>Project name<span class="asteriskRequiredColor">*</span> :</label>
+            <input type="text" class="form-control" formControlName="name" [ngModel]='projectObj.name' name="name"
+                placeholder="Enter Project name" [ngClass]="{ 'is-invalid': submitted && f.name.errors }">
+            <div *ngIf="submitted && f.name.errors" class="validationErrorMsg">
+                <div *ngIf="f.name.errors.required">Project name is required.</div>
+                <div *ngIf="f.name.errors?.pattern">Invalid project name.</div>
+            </div>
+        </div>
+        <div class="form-group col-sm-6 p-dropdownStyle">
+            <label>Customer name<span class="asteriskRequiredColor">*</span> :</label>
+            <p-dropdown formControlName="customerId" [style]="{'width':'100%'}" [options]="customersList"
+                [filter]="true" placeholder="Customer name" [ngModel]="projectObj.customerId"
+                [ngClass]="{ 'is-invalid': submitted && f.customerId.errors }">
+            </p-dropdown>
+            <div *ngIf="submitted && f.customerId.errors" class="validationErrorMsg">
+                <div *ngIf="f.customerId.errors.required">Customer name is required.</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="row">
+            <div class="col-md-6 p-dropdownStyle">
+                <label>Project Type :</label>
+                <p-dropdown formControlName="typeId" [options]="ProjectTypes" [filter]="true"
+                    [ngModel]="projectObj.typeId ? projectObj.typeId : selectedProjectType"
+                    [ngClass]="{ 'is-invalid': submitted && f.typeId.errors }">
+                </p-dropdown>
+                <div *ngIf="submitted && f.typeId.errors" class="validationErrorMsg">
+                    <div *ngIf="f.typeId.errors.required">Project type is required.</div>
+                </div>
+            </div>
+            <div class="col-md-6 p-dropdownStyle">
+                <label>Status :</label>
+                <p-dropdown formControlName="isActive" [style]="{'width':'100%'}" [options]="IsActiveTypes"
+                    [filter]="true" [ngModel]="projectObj.isActive ? projectObj.isActive : selectedIsActiveType"
+                    [ngClass]="{ 'is-invalid': submitted && f.isActive.errors }">
+                </p-dropdown>
+                <div *ngIf="submitted && f.isActive.errors" class="validationErrorMsg">
+                    <div *ngIf="f.isActive.errors.required">Status is required.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label>Description<span class="asteriskRequiredColor">*</span> :</label>
+        <textarea type="text" class="form-control textarea-size" formControlName="description"
+            [ngModel]='projectObj.description' name="description" placeholder="Enter description" rows="3" cols="3"
+            [ngClass]="{ 'is-invalid': submitted && f.description.errors }"></textarea>
+        <div *ngIf="submitted && f.description.errors" class="validationErrorMsg">
+            <div *ngIf="f.description.errors.required">Description is required.</div>
+        </div>
+    </div>
+    <div class="">
+        <button *ngIf="!loading" type="submit" class="btn btn-sm btn-primary m-1">
+            <span><i class="fa fa-dot-circle-o"></i>&nbsp;Save</span>
+        </button>
+        <button *ngIf="loading" class="btn btn-sm btn-primary m-1" color="primary" type="button" disabled>
+            <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+            <span>Loading...</span>
+        </button>
+    </div>
+</form>
+
+<p-toast key="commonMsg" position="top-right"  [autoZIndex]="false"   [style]="{'z-index': 10001}"></p-toast>

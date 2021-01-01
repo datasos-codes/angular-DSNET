@@ -1,0 +1,41 @@
+<form [formGroup]="addEditDesignationFrm" (ngSubmit)="onSubmitaddEditDesignationFrm()">
+    <div class="form-group">
+        <label>Designation<span class="asteriskRequiredColor">*</span> :</label>
+        <input type="text" class="form-control" formControlName="designation" [ngModel]='designationObj.designation'
+            name="designation" placeholder="Enter Designation"
+            [ngClass]="{ 'is-invalid': submitted && f.designation.errors }" required>
+        <div *ngIf="submitted && f.designation.errors" class="validationErrorMsg">
+            <div *ngIf="f.designation.errors.required">Designation is required.</div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="row">
+            <div class="col-md-6 p-dropdownStyle">
+                <label>Status :</label>
+                <p-dropdown formControlName="isActive" [style]="{'width':'100%'}" [options]="IsActiveTypes"
+                    [filter]="true" [ngModel]="designationObj.isActive ? designationObj.isActive : selectedIsActiveType"
+                    [ngClass]="{ 'is-invalid': submitted && f.isActive.errors }">
+                </p-dropdown>
+                <div *ngIf="submitted && f.isActive.errors" class="validationErrorMsg">
+                    <div *ngIf="f.isActive.errors.required">Status is required.</div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <label>Description :</label>
+                <textarea type="text" class="form-control textarea-size" formControlName="description"
+                    [ngModel]='designationObj.description' name="description" placeholder="Enter Description" rows="3"
+                    cols="3">
+                </textarea>
+            </div>
+        </div>
+    </div>
+    <div class="">
+        <button *ngIf="!loading" type="submit" class="btn btn-sm btn-primary m-1">
+            <span><i class="fa fa-dot-circle-o"></i>&nbsp;Save</span>
+        </button>
+        <button *ngIf="loading" class="btn btn-sm btn-primary m-1" color="primary" type="button" disabled>
+            <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+            <span>Loading...</span>
+        </button>
+    </div>
+</form>

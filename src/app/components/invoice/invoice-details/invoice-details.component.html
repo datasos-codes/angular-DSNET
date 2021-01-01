@@ -1,0 +1,202 @@
+<div *ngIf='invoiceModulePermission?.allowed === true' class="row multiple-row-table">
+    <div class="col-md-12">
+        <form *ngIf="invoiceFilterForm" class="form-horizontal" [formGroup]="invoiceFilterForm">
+            <div class="card" formArrayName="invoiceArr">
+                <div class="card-header">
+                    <i class="fa fa-file-o"></i> <strong>Invoices</strong>&nbsp;<small>Details</small>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div *ngIf="filterProjectByNamesFrm" class="row">
+                            <div class="col-sm-12">
+                                <div class="callout callout-info">
+                                    <form [formGroup]="filterProjectByNamesFrm" class="form-inline">
+                                        <div class="form-group">
+                                            <strong class="text-muted mr-2">Filter By: </strong>
+                                        </div>
+                                        <div class="p-dropdownStyle mr-5" style="width: 10em;max-width:10em;">
+                                            <p-dropdown formControlName="filterByProjectName"
+                                                [(ngModel)]='selectedAllProject' [options]="projectNamesList"
+                                                [filter]="true" placeholder="Project Name"
+                                                (onChange)="onChangefilter($event)">
+                                            </p-dropdown>
+                                        </div>
+                                        <div class="form-group mr-2 timePickerInputtext">
+                                            <p-calendar formControlName="filterByMonth" view="month"
+                                                dateFormat="MM - yy" [readonlyInput]="true" placeholder="Select Month"
+                                                (onClose)="onChangefilter($event)">
+                                            </p-calendar>
+                                        </div>
+                                        <div class="form-group">
+                                            <button type="button" class="btn btn-sm btn-danger mr-3"
+                                                (click)="clearFilter()">
+                                                <i class="fa fa-ban"></i> Reset
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="widgets-totals">
+                            <button *ngIf='dynamicButtonsobj.ExportToExcel' class="btn btn-sm btn-brand btn-spotify"
+                                type="button" (click)="exportexcel()">
+                                <i class="fa fa-download"></i><span> Export To Excel</span>
+                            </button>
+                        </div>
+                        <div class="widgets-totals btn-toolbar d-none d-md-block" role="toolbar"
+                            aria-label="Toolbar with buttons">
+                            <button class="btn btn-sm btn-linkedin mr-2" type="button">
+                                <i class="fa fa-calendar"></i><span> Weekdays: {{weekDays}} </span>
+                            </button>
+                            <button class="btn btn-sm btn-linkedin mr-2" type="button">
+                                <i class="fa fa-calendar"></i><span> Holidays: {{holidays}} </span>
+                            </button>
+                            <button class="btn btn-sm btn-linkedin mr-2" type="button">
+                                <i class="fa fa-calendar"></i><span> Working Days: {{workingDays}} </span>
+                            </button>
+                        </div>
+                    </div>
+                    <div [ngClass]="{'table-outline':checkBrowser}">
+                        <div class="invoice-datatable">
+                            <p-table #invoiceDetailsTable [value]="t.controls" [showCurrentPageReport]="true"
+                                styleClass="ui-table-primedatatable" [rowHover]="true" [filterDelay]="0"
+                                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                                (sortFunction)="customSortForInvoiceTable($event)" [customSort]="true">
+                                <ng-template pTemplate="header">
+                                    <tr>
+                                        <th style="width: 10em;"></th>
+                                        <th style="width: 8em;"></th>
+                                        <th style="width: 8em;"></th>
+                                        <th style="width: 8em;"></th>
+                                        <th style="width: 11em;"></th>
+                                        <th style="width: 10em;"></th>
+                                        <th style="width: 10em;text-align: center;">
+                                            <strong>Total : {{sumOfBillableAmt ? sumOfBillableAmt : 0}}</strong>
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <th pSortableColumn="employee" style="width: 10em;">Employee
+                                            <p-sortIcon field="employee"></p-sortIcon>
+                                        </th>
+                                        <th pSortableColumn="billingRate" style="width: 8em;">Billing Rate
+                                            <p-sortIcon field="billingRate"></p-sortIcon>
+                                        </th>
+                                        <th pSortableColumn="perDayRate" style="width: 8em;">Per Day Rate
+                                            <p-sortIcon field="perDayRate"></p-sortIcon>
+                                        </th>
+                                        <th pSortableColumn="workingDays" style="width: 8em;">Working Days
+                                            <p-sortIcon field="workingDays"></p-sortIcon>
+                                        </th>
+                                        <th pSortableColumn="leaveAdjustments" style="width: 11em;">Leave
+                                            Adjustments
+                                            <p-sortIcon field="leaveAdjustments"></p-sortIcon>
+                                        </th>
+                                        <th pSortableColumn="finalBillableDays">Final Billable
+                                            Days
+                                            <p-sortIcon field="finalBillableDays"></p-sortIcon>
+                                        </th>
+                                        <th pSortableColumn="billableAmount" style="width: 10em;">Billable Amount
+                                            <p-sortIcon field="billableAmount"></p-sortIcon>
+                                        </th>
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
+                                    <tr [formGroupName]="rowIndex">
+                                        <td style="width: 10em;">
+                                            <p-cellEditor>
+                                                <ng-template pTemplate="input">
+                                                    <input type="text" pInputText formControlName="employee" readonly
+                                                        appTwoDigitDecimaNumber>
+                                                </ng-template>
+                                                <ng-template pTemplate="output">
+                                                    {{rowData['controls']['employee'].value}}
+                                                </ng-template>
+                                            </p-cellEditor>
+                                        </td>
+                                        <td pEditableColumn style="width: 8em;">
+                                            <p-cellEditor>
+                                                <ng-template pTemplate="input">
+                                                    <input type="text" pInputText formControlName="billingRate"
+                                                        #billingRateValue id='billingRateValue' appTwoDigitDecimaNumber
+                                                        (keypress)="preventMinusSign($event.keyCode)"
+                                                        (input)="getBillableAMt(billingRateValue.value, rowIndex)"
+                                                        placeholder=" Billing Rate">
+                                                </ng-template>
+                                                <ng-template pTemplate="output">
+                                                    {{rowData['controls']['billingRate'].value}}
+                                                </ng-template>
+                                            </p-cellEditor>
+                                        </td>
+                                        <td style="width: 8em;">
+                                            <p-cellEditor>
+                                                <ng-template pTemplate="input">
+                                                    <input type="text" pInputText formControlName="perDayRate"
+                                                        appTwoDigitDecimaNumber placeholder="Perday Rate" step="0.01">
+                                                </ng-template>
+                                                <ng-template pTemplate="output">
+                                                    {{rowData['controls']['perDayRate'].value}}
+                                                </ng-template>
+                                            </p-cellEditor>
+                                        </td>
+                                        <td style="width: 8em;">
+                                            <p-cellEditor>
+                                                <ng-template pTemplate="input">
+                                                    <input type="text" pInputText formControlName="workingDays" readonly
+                                                        appTwoDigitDecimaNumber>
+                                                </ng-template>
+                                                <ng-template pTemplate="output">
+                                                    {{rowData['controls']['workingDays'].value}}
+                                                </ng-template>
+                                            </p-cellEditor>
+                                        </td>
+                                        <td pEditableColumn style="width: 11em;">
+                                            <p-cellEditor>
+                                                <ng-template pTemplate="input">
+                                                    <input type="text" pInputText formControlName="leaveAdjustments"
+                                                        #leaveAsjValue id='leaveAsjValue' appTwoDigitDecimaNumber
+                                                        (input)="getLeaveAdjustmentValue(leaveAsjValue.value, rowIndex)"
+                                                        placeholder="Leave Adjustments">
+                                                </ng-template>
+                                                <ng-template pTemplate="output">
+                                                    {{rowData['controls']['leaveAdjustments'].value}}
+                                                </ng-template>
+                                            </p-cellEditor>
+                                        </td>
+                                        <td>
+                                            <p-cellEditor>
+                                                <ng-template pTemplate="input">
+                                                    <input type="text" pInputText formControlName="finalBillableDays"
+                                                        readonly appTwoDigitDecimaNumber>
+                                                </ng-template>
+                                                <ng-template pTemplate="output">
+                                                    {{rowData['controls']['finalBillableDays'].value}}
+                                                </ng-template>
+                                            </p-cellEditor>
+                                        </td>
+                                        <td style="width: 10em;">
+                                            <p-cellEditor>
+                                                <ng-template pTemplate="input">
+                                                    <input type="text" pInputText formControlName="billableAmount"
+                                                        readonly appTwoDigitDecimaNumber>
+                                                </ng-template>
+                                                <ng-template pTemplate="output">
+                                                    {{rowData['controls']['billableAmount'].value}}
+                                                </ng-template>
+                                            </p-cellEditor>
+                                        </td>
+                                    </tr>
+                                </ng-template>
+                                <!-- No records found -->
+                                <ng-template pTemplate="emptymessage">
+                                    <tr>
+                                        <td colspan="7" style="text-align:center">No records found.</td>
+                                    </tr>
+                                </ng-template>
+                            </p-table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

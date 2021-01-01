@@ -1,0 +1,13 @@
+.modal-content {
+    display: flex;
+    flex-direction: column;
+}
+.modal-body {
+    overflow: auto;
+    max-height: 80vh;
+}
+.modal-header, .modal-footer {
+    flex-grow: 1;
+    flex-shrink: 0;
+    flex-basis: auto;
+}

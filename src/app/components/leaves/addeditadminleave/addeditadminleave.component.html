@@ -1,0 +1,92 @@
+<form [formGroup]="addEditAdminLeavesFrm" (ngSubmit)="onSubmitAddEditAdminLeavesFrm()">
+    <div class="row">
+        <div class="form-group col-md-6 p-dropdownStyle">
+            <label>Employee<span class="asteriskRequiredColor">*</span> :</label>
+            <p-dropdown formControlName="employeeId" [style]="{'width':'100%'}" [options]="employeeData" [filter]="true"
+                placeholder="Employee name" [ngModel]="adminLeavesObj.employeeId"
+                [ngClass]="{ 'is-invalid': submitted && f.employeeId.errors }"></p-dropdown>
+            <div *ngIf="submitted && f.employeeId.errors" class="validationErrorMsg">
+                <div *ngIf="f.employeeId.errors.required">EmployeeId is required.</div>
+            </div>
+        </div>
+        <div class="form-group col-md-6">
+            <label>Leave start date - end date<span class="asteriskRequiredColor">*</span> :</label>
+            <input type="text" class="form-control" placeholder="Leave start date - end date" bsDaterangepicker
+                formControlName="range" [ngModel]='adminLeavesObj.range' onkeydown="return false"
+                (bsValueChange)="countTotalNumberOfLeaves($event)"
+                [ngClass]="{ 'is-invalid': submitted && f.range.errors }"
+                [bsConfig]="{ dateInputFormat: 'YYYY-MM-DD', containerClass: 'theme-red' }" />
+            <div *ngIf="submitted && f.range.errors" class="validationErrorMsg">
+                <div *ngIf="f.range.errors.required">Leave start date - end date is required.</div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-md-6" *ngIf='isNeedToRenderLeaveTotal'>
+            <label>Total leave (In days):</label>
+            <input type="text" class="form-control" disabled formControlName="numberOfDays"
+                [ngModel]='adminLeavesObj?.numberOfDays' />
+        </div>
+        <div class="form-group col-md-6 p-dropdownStyle" *ngIf='isNeedToRenderLeaveFor'>
+            <label>Leave For :</label>
+            <p-dropdown formControlName="leaveFor" [style]="{'width':'100%'}" [options]="LeaveForTypes" [filter]="true"
+                [ngModel]="adminLeavesObj.leaveFor ? adminLeavesObj.leaveFor : selectedLeaveForType"
+                [ngClass]="{ 'is-invalid': submitted && f.leaveFor.errors }">
+            </p-dropdown>
+            <div *ngIf="submitted && f.leaveFor.errors" class="validationErrorMsg">
+                <div *ngIf="f.leaveFor.errors.required">Leave For is required.</div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-md-6 p-dropdownStyle">
+            <label>Leave Type :</label>
+            <p-dropdown formControlName="leaveType" [style]="{'width':'100%'}" [options]="LeaveTypes" [filter]="true"
+                [ngModel]="adminLeavesObj.leaveType ? adminLeavesObj.leaveType : selectedLeaveType"
+                [ngClass]="{ 'is-invalid': submitted && f.leaveType.errors }">
+            </p-dropdown>
+            <div *ngIf="submitted && f.leaveType.errors" class="validationErrorMsg">
+                <div *ngIf="f.leaveType.errors.required">LeaveType is required.</div>
+            </div>
+        </div>
+        <div class="form-group col-md-6 p-dropdownStyle">
+            <label>Status :</label>
+            <p-dropdown formControlName="status" [style]="{'width':'100%'}" [options]="LeaveStatusTypes" [filter]="true"
+                [ngModel]="adminLeavesObj.status ? adminLeavesObj.status : selectedStatusType"
+                [ngClass]="{ 'is-invalid': submitted && f.status.errors }">
+            </p-dropdown>
+            <div *ngIf="submitted && f.status.errors" class="validationErrorMsg">
+                <div *ngIf="f.status.errors.required">Status is required.</div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-md-6">
+            <label>Reason<span class="asteriskRequiredColor">*</span> :</label>
+            <textarea type="text" class="form-control textarea-size" formControlName="reason"
+                [ngModel]='adminLeavesObj.reason' name="reason" placeholder="Enter reason"
+                [ngClass]="{ 'is-invalid': submitted && f.reason.errors }"></textarea>
+            <div *ngIf="submitted && f.reason.errors" class="validationErrorMsg">
+                <div *ngIf="f.reason.errors.required">Reason is required.</div>
+            </div>
+        </div>
+        <div class="form-group col-md-6">
+            <label>Remark :</label>
+            <textarea type="text" class="form-control textarea-size" formControlName="remark"
+                [ngModel]='adminLeavesObj.remark' name="remark" placeholder="Enter remark"
+                [ngClass]="{ 'is-invalid': submitted && f.remark.errors }"></textarea>
+            <!-- <div *ngIf="submitted && f.remark.errors" class="validationErrorMsg">
+                <div *ngIf="f.remark.errors.required">Remark is required.</div>
+            </div> -->
+        </div>
+    </div>
+    <div class="">
+        <button *ngIf="!loading" type="submit" class="btn btn-sm btn-primary m-1">
+            <span><i class="fa fa-dot-circle-o"></i>&nbsp;Save</span>
+        </button>
+        <button *ngIf="loading" class="btn btn-sm btn-primary m-1" color="primary" type="button" disabled>
+            <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+            <span>Loading...</span>
+        </button>
+    </div>
+</form>

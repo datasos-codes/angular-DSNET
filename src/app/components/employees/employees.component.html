@@ -1,0 +1,181 @@
+<div class="animated fadeIn primeng-datatable" *ngIf='employeeModulePermission?.allowed === true'>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    <i class="icon-people"></i><strong>Employees</strong>&nbsp;<small>Details</small>
+                    <div class="card-header-actions">
+                        <div *ngIf='dynamicButtonsobj.Add' class="col-6 col-sm-4 col-md mb-3 mb-xl-0 text-center">
+                            <button type="button" class="btn btn-sm btn-primary"
+                                (click)="openAddEditEmployeeDialog()"><i class="fa fa-plus"></i>&nbsp;Add
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <p-table #employeetable [value]="employeeData" [paginator]="true" [rows]="10"
+                        [showCurrentPageReport]="true" styleClass="ui-table-primedatatable" [rowHover]="true"
+                        [rowsPerPageOptions]="[10,25,50]" [filterDelay]="0"
+                        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                        [(selection)]="selectedCheckBoxForEmployees" [scrollable]="true" scrollHeight="auto"
+                        (sortFunction)="customSortForEmployeeTable($event)" [customSort]="true" [responsive]="true"
+                        [globalFilterFields]="['fullName','joiningDate','userName','roleName','companyEmail','designation','birthDate',
+                        'panNumber','aadharNumber','gender','isActive','createdBy','modifiedBy']">
+                        <!-- Top bar -->
+                        <ng-template pTemplate="caption">
+                            <div class="ui-helper-clearfix" style="text-align: left">
+                                <!-- Export to excel -->
+                                <button type="button" class="btn btn-sm btn-success mr-2"
+                                    (click)="exportExcelEmployees(selectedCheckBoxForEmployees)"
+                                    *ngIf='dynamicButtonsobj.ExportToExcel'>
+                                    <i class="fa fa-file-excel-o"></i>
+                                    EXCEL
+                                </button>
+                                <!-- Delete multiple -->
+                                <button type="button" class="btn btn-sm btn-danger"
+                                    (click)="showConfirmForDeleteEmployees(selectedCheckBoxForEmployees)"
+                                    *ngIf='dynamicButtonsobj.MultipleDelete'>
+                                    <i class="fa fa-times"></i>
+                                    DELETE
+                                </button>
+                                <!-- globle search -->
+                                <input type="text" class="globalSearchTxt"
+                                    (input)="employeetable.filterGlobal($event.target.value, 'contains')"
+                                    placeholder="Search" />
+                            </div>
+                        </ng-template>
+                        <!-- Table Header -->
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th style="width: 2em"
+                                    *ngIf='dynamicButtonsobj.ExportToExcel || dynamicButtonsobj.MultipleDelete'>
+                                    <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                                </th>
+                                <th style="width: 9em" *ngIf='(dynamicButtonsobj.View || dynamicButtonsobj.Edit
+                                || dynamicButtonsobj.SingleDelete) ? true : false'>Action</th>
+                                <th pSortableColumn="fullName" style="width: 12em">Employee
+                                    <p-sortIcon field="fullName"></p-sortIcon>
+                                </th>
+                                <th pSortableColumn="joiningDate" style="width: 9em">Joining Date
+                                    <p-sortIcon field="joiningDate"></p-sortIcon>
+                                </th>
+                                <th pSortableColumn="userName" style="width: 8em">User Name
+                                    <p-sortIcon field="userName"></p-sortIcon>
+                                </th>
+                                <th pSortableColumn="roleName" style="width: 8em">Role
+                                    <p-sortIcon field="roleName"></p-sortIcon>
+                                </th>
+                                <th pSortableColumn="companyEmail" style="width: 15em">Company Email
+                                    <p-sortIcon field="companyEmail"></p-sortIcon>
+                                </th>
+                                <th pSortableColumn="designation" style="width: 10em">Designation
+                                    <p-sortIcon field="designation"></p-sortIcon>
+                                </th>
+                                <th pSortableColumn="birthDate" style="width: 9em">Birth Date
+                                    <p-sortIcon field="birthDate"></p-sortIcon>
+                                </th>
+                                <th pSortableColumn="panNumber" style="width: 8em">PAN
+                                    <p-sortIcon field="panNumber"></p-sortIcon>
+                                </th>
+                                <th pSortableColumn="aadharNumber" style="width: 8em">Aadhaar Number
+                                    <p-sortIcon field="aadharNumber"></p-sortIcon>
+                                </th>
+                                <th pSortableColumn="gender" style="width: 7em">Gender
+                                    <p-sortIcon field="gender"></p-sortIcon>
+                                </th>
+                                <th pSortableColumn="isActive" style="width: 6em">Status
+                                    <p-sortIcon field="isActive"></p-sortIcon>
+                                </th>
+                                <th pSortableColumn="createdBy" style="width: 9em">Created By
+                                    <p-sortIcon field="createdBy"></p-sortIcon>
+                                </th>
+                                <th pSortableColumn="modifiedBy" style="width: 9em">Modified By
+                                    <p-sortIcon field="modifiedBy"></p-sortIcon>
+                                </th>
+                            </tr>
+                        </ng-template>
+                        <!-- Table row -->
+                        <ng-template pTemplate="body" let-employees>
+                            <tr>
+                                <td style="width: 2em"
+                                    *ngIf='dynamicButtonsobj.ExportToExcel || dynamicButtonsobj.MultipleDelete'>
+                                    <p-tableCheckbox [value]="employees"></p-tableCheckbox>
+                                </td>
+                                <td style="width: 9em" *ngIf='(dynamicButtonsobj.View || dynamicButtonsobj.Edit
+                                || dynamicButtonsobj.SingleDelete) ? true : false'>
+                                    <button type="button" class="btn btn-sm btn-info mr-1" tooltip="View"
+                                        placement="bottom" (click)="viewEmployeeDetails(employees.employeeId)"
+                                        *ngIf='dynamicButtonsobj.View'>
+                                        <i class="fa fa-eye"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-sm btn-primary mr-1" tooltip="Edit"
+                                        placement="bottom" (click)="editEmployeeDetails(employees.employeeId)"
+                                        *ngIf='dynamicButtonsobj.Edit'>
+                                        <i class="fa fa-edit"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-sm btn-danger" tooltip="Delete"
+                                        placement="bottom" (click)="showConfirmForDeleteEmployees(employees.employeeId)"
+                                        *ngIf='(dynamicButtonsobj.SingleDelete && loggedInUserIDs != employees.employeeId)'>
+                                        <i class="fa fa-trash-o" aria-hidden="true"></i>
+                                    </button>
+                                </td>
+                                <td style="width: 12em;padding-left: 8px !important;text-align: left;">
+                                    {{ employees.fullName }}
+                                </td>
+                                <td style="width: 9em">{{ employees.joiningDate }}</td>
+                                <td style="width: 8em">{{ employees.userName }}</td>
+                                <td style="width: 8em">{{ employees.roleName }}</td>
+                                <td style="width: 15em;padding-left: 8px !important;text-align: left;">
+                                    {{ employees.companyEmail }}</td>
+                                <td style="width: 10em">{{ employees.designation }}</td>
+                                <td style="width: 9em">{{ employees.birthDate }}</td>
+                                <td style="width: 8em">{{ employees.panNumber }}</td>
+                                <td style="width: 8em">{{ employees.aadharNumber }}</td>
+                                <td style="width: 7em">{{ employees.gender }}</td>
+                                <td style="width: 6em">
+                                    <span [class]="'datatable-badge status-' + employees.isActive">
+                                        {{employees.isActive}}
+                                    </span>
+                                </td>
+                                <td style="width: 9em;padding-left: 8px !important;text-align: left;">
+                                    {{employees.createdBy}}</td>
+                                <td style="width: 9em;padding-left: 8px !important;text-align: left;">
+                                    {{employees.modifiedBy}}</td>
+                            </tr>
+                        </ng-template>
+                        <!-- No records found -->
+                        <ng-template pTemplate="emptymessage">
+                            <tr>
+                                <td colspan="15" style="text-align:center">No records found.</td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Danger Model -->
+
+<p-toast key="commonMsg" position="top-right" [autoZIndex]="false" [style]="{'z-index': 10001}"></p-toast>
+
+<p-toast position="center" key="deleteEmployeeKey" (onClose)="onReject()" [modal]="true" [autoZIndex]="false"
+    [style]="{'z-index': 10001}">
+    <ng-template let-message pTemplate="message">
+        <div style="text-align: center">
+            <i class="pi pi-exclamation-triangle" style="font-size: 3em"></i>
+            <h3>{{message.summary}}</h3>
+            <p>{{message.detail}}</p>
+        </div>
+        <div class="ui-g ui-fluid">
+            <div class="ui-g-6">
+                <button type="button" pButton (click)="deleteEmployeeDetails(message.data)" label="Yes"
+                    class="ui-button-success"></button>
+            </div>
+            <div class="ui-g-6">
+                <button type="button" pButton (click)="onReject()" label="No" class="ui-button-secondary"></button>
+            </div>
+        </div>
+    </ng-template>
+</p-toast>

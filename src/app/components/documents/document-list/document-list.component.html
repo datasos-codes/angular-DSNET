@@ -1,0 +1,183 @@
+<div *ngIf='documentsModulePermission?.allowed === true' class="row table-card-style">
+    <div *ngIf="filterFrm" class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <i class="fa fa-briefcase"></i><strong>Documents</strong>&nbsp;<small>Details</small>
+                <div class="card-header-actions" style="height: 25px;" *ngIf='dynamicButtonsobj.Add'>
+                    <button type="button" class="btn btn-sm btn-primary" (click)="showDocumentDialog()"><i
+                            class="fa fa-plus"></i>&nbsp;Add
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="callout callout-info">
+                            <form [formGroup]="filterFrm" class="form-inline">
+                                <div class="form-group">
+                                    <strong class="text-muted mr-3">Filter By: </strong>
+                                </div>
+                                <div class="p-dropdownStyle mr-5" style="width: 10em;max-width:10em;">
+                                    <p-dropdown formControlName="projectId" [(ngModel)]='selectedAllProject'
+                                        [options]="projectNamesList" optionLabel="label" [filter]="true"
+                                        (onChange)="getDocuments()">
+                                    </p-dropdown>
+                                </div>
+                                <div class="p-dropdownStyle mr-5" style="width: 10em;max-width:10em;">
+                                    <p-dropdown formControlName="isPublic" [(ngModel)]="selectedAllIsPublicType"
+                                        [options]="IsPublicTypes" optionLabel="label" (onChange)="getDocuments()"
+                                        [filter]="true">
+                                    </p-dropdown>
+                                </div>
+                                <div class="form-group">
+                                    <button type="reset" class="btn btn-sm btn-danger" (click)="clearFilter()">
+                                        <i class="fa fa-ban"></i> Reset
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="primeng-datatable">
+                    <p-table #documentstable [value]="documentsData" [paginator]="true" [rows]="10"
+                        [showCurrentPageReport]="true" styleClass="ui-table-primedatatable" [rowHover]="true"
+                        [rowsPerPageOptions]="[10,25,50]" [filterDelay]="0"
+                        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                        [(selection)]="selectedDocumentsForCheckBox" [scrollable]="true" scrollHeight="auto"
+                        (sortFunction)="customSortForDocumentsTable($event)" [customSort]="true"
+                        [globalFilterFields]="['name','projectName','isPublic','createdBy','modifiedBy']">
+                        <!-- Top bar -->
+                        <ng-template pTemplate="caption">
+                            <div class="ui-helper-clearfix" style="text-align: left">
+                                <!-- Delete multiple -->
+                                <button type="button" class="btn btn-sm btn-danger"
+                                    (click)="showConfirmForDeleteDocument(selectedDocumentsForCheckBox)"
+                                    *ngIf='dynamicButtonsobj.MultipleDelete'>
+                                    <i class="fa fa-times"></i>&nbsp;DELETE
+                                </button>
+                                <!-- globle search -->
+                                <input type="text" class="globalSearchTxt"
+                                    (input)="documentstable.filterGlobal($event.target.value, 'contains')"
+                                    placeholder="Search" />
+                            </div>
+                        </ng-template>
+                        <!-- Table Header -->
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th style="width: 2em;" *ngIf='dynamicButtonsobj.MultipleDelete'>
+                                    <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                                </th>
+                                <th style="width:9em" *ngIf='(dynamicButtonsobj.Edit
+                                || dynamicButtonsobj.SingleDelete || dynamicButtonsobj.Download || dynamicButtonsobj.View 
+                                || dynamicButtonsobj.CopyLink) ? true : false'>
+                                    Action
+                                </th>
+                                <th pSortableColumn="name" style="width: 9em;">Name
+                                    <p-sortIcon field="name"></p-sortIcon>
+                                </th>
+                                <th pSortableColumn="projectName" style="width: 8em;">Project
+                                    <p-sortIcon field="projectName"></p-sortIcon>
+                                </th>
+                                <th pSortableColumn="isPublic" style="width: 6em;">Is Public
+                                    <p-sortIcon field="isPublic"></p-sortIcon>
+                                </th>
+                                <th pSortableColumn="createdBy" style="width: 9em;">Created By
+                                    <p-sortIcon field="createdBy"></p-sortIcon>
+                                </th>
+                                <th pSortableColumn="modifiedBy" style="width: 9em;">Modified By
+                                    <p-sortIcon field="modifiedBy"></p-sortIcon>
+                                </th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-documents>
+                            <tr>
+                                <td style="width: 2em;" *ngIf='dynamicButtonsobj.MultipleDelete'>
+                                    <p-tableCheckbox [value]="documents"></p-tableCheckbox>
+                                </td>
+                                <td style="width:9em"
+                                    *ngIf='(dynamicButtonsobj.Edit
+                                || dynamicButtonsobj.SingleDelete || dynamicButtonsobj.Download || dynamicButtonsobj.CopyLink) ? true : false'>
+                                    <button type="button" class="btn btn-sm btn-primary mr-1" tooltip="Edit"
+                                        placement="bottom" (click)="showDocumentDialog(documents)"
+                                        *ngIf='dynamicButtonsobj.Edit'>
+                                        <i class="fa fa-edit"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-sm btn-info mr-1" tooltip="Copy external link"
+                                        (click)="copyExternalLink(documents.externalLink)"
+                                        *ngIf='dynamicButtonsobj.CopyLink && documents.externalLink' placement="bottom">
+                                        <i class="fa fa-copy"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-sm btn-info mr-1" tooltip="View"
+                                        placement="bottom" (click)="viewDocument(documents)"
+                                        *ngIf='dynamicButtonsobj.View && documents.virtualPath !== null'>
+                                        <i class="fa fa-eye"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-sm btn-secondary mr-1" tooltip="Download"
+                                        placement="bottom" (click)="downloadDocument(documents)"
+                                        *ngIf='dynamicButtonsobj.Download && documents.virtualPath !== null'>
+                                        <i class="fa fa-download" aria-hidden="true"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-sm btn-danger mr-1" tooltip="Delete"
+                                        placement="bottom" (click)="showConfirmForDeleteDocument(documents.id)"
+                                        *ngIf='dynamicButtonsobj.SingleDelete'>
+                                        <i class="fa fa-trash-o" aria-hidden="true"></i>
+                                    </button>
+                                </td>
+                                <td style="width: 9em;text-align: left;padding-left:8px !important;">
+                                    {{documents.name}}
+                                </td>
+                                <td style="width: 8em;">{{documents.projectName}}</td>
+                                <td style="width: 6em;">
+                                    <span [class]="'datatable-badge status-' + documents.isPublic">
+                                        {{documents.isPublic}}
+                                    </span>
+                                </td>
+                                <td style="width: 9em;padding-left: 8px !important;text-align: left;">
+                                    {{documents.createdBy}}</td>
+                                <td style="width: 9em;padding-left: 8px !important;text-align: left;">
+                                    {{documents.modifiedBy}}</td>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="emptymessage">
+                            <tr>
+                                <td colspan="7" style="text-align:center">No records found.</td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <p-toast key="commonMsg" position="top-right" [autoZIndex]="false" [style]="{'z-index': 10001}"></p-toast>
+
+    <p-toast position="center" key="deleteDocumentKey" (onClose)="onReject()" [modal]="true" [autoZIndex]="false"
+        [style]="{'z-index': 10001}">
+        <ng-template let-message pTemplate="message">
+            <div style="text-align: center">
+                <i class="pi pi-exclamation-triangle" style="font-size: 3em"></i>
+                <h3>{{message.summary}}</h3>
+                <p>{{message.detail}}</p>
+            </div>
+            <div class="ui-g ui-fluid">
+                <div class="ui-g-6">
+                    <button type="button" pButton (click)="deleteDocumentDetails(message.data)" label="Yes"
+                        class="ui-button-success"></button>
+                </div>
+                <div class="ui-g-6">
+                    <button type="button" pButton (click)="onReject()" label="No" class="ui-button-secondary"></button>
+                </div>
+            </div>
+        </ng-template>
+    </p-toast>
+
+    <div *ngIf='isNeedToRenderUIModal'>
+        <app-ui-modal [isNeedToRenderUIModal]='isNeedToRenderUIModal' [displayHeader]='displayHeader'
+            [UIModalStyle]="{width: '35vw'}" (closeUIModalEvent)="closeUIModal()">
+            <app-addeditdocument [documentListObj]="documentListObj" [projectNamesList]='projectNamesList'
+                [keyWordTypes]='keyWordTypes' [IsPublicTypes]='IsPublicTypes' [documentsDataRes]='documentsData'
+                (closeDocumentsUIModalEvent)='closeUIModal($event)' (removeSelectedFile)='removeSelectedFile($event)'>
+            </app-addeditdocument>
+        </app-ui-modal>
+    </div>
+</div>

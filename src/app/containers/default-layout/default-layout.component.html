@@ -1,0 +1,88 @@
+<app-header [navbarBrandRouterLink]="['/dashboard']" [fixed]="true"
+  [navbarBrandFull]="{src: 'assets/img/brand/datasoslogo.png', width: 89, height: 30, alt: 'CoreUI Logo'}"
+  [navbarBrandMinimized]="{src: 'assets/img/brand/dlogo.png', width: 30, height: 30, alt: 'CoreUI Logo'}"
+  [sidebarToggler]="'lg'" [asideMenuToggler]=false>
+  <ul class="nav navbar-nav ml-auto">
+    <li class="nav-item dropdown" dropdown placement="bottom right">
+      <app-notification-list [notificationArr]="notificationArr" [NotificationCount]="NotificationCount">
+      </app-notification-list>
+    </li>
+    <li class="nav-item px-3 dropdown" dropdown placement="bottom right">
+      <a class="nav-link" href="#" data-toggle="dropdown" href="#" role="button" aria-haspopup="true"
+        aria-expanded="false" dropdownToggle (click)="false">
+        <div class='userNameInfo'><b>{{loginUserName}}</b><br>
+          {{loginUserdesignation}}</div>
+      </a>
+      <div class="dropdown-menu dropdown-menu-right rightDropdown" *dropdownMenu aria-labelledby="simple-dropdown">
+        <div class="dropdown-header text-center"><strong>Account</strong></div>
+        <a class="dropdown-item" (click)="userProfile()"><i class="fa fa-user"></i> Profile</a>
+        <a class="dropdown-item" data-toggle="modal" (click)="showChangePasswordDialog()"><i class="fa fa-key"></i>
+          Change password</a>
+        <a class="dropdown-item" (click)="logout()"><i class="fa fa-lock"></i> Logout</a>
+      </div>
+    </li>
+    <li class="nav-item dropdown" dropdown placement="bottom right">
+      <a class="nav-link" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"
+        dropdownToggle (click)="false">
+        <div *ngIf="loginUserProfileImage">
+          <img src="{{loginUserProfileImage}}?{{updateImageTime}}" class="default-image" alt="" />
+        </div>
+        <div *ngIf="!loginUserProfileImage">
+          <div *ngIf="isGender === 1">
+            <img src="../../../assets/img/avatars/male-image.jpg" class="default-image" alt="" />
+          </div>
+          <div *ngIf="isGender === 0">
+            <img src="../../../assets/img/avatars/female-image.jpg" class="default-image" alt="" />
+          </div>
+        </div>
+      </a>
+      <div class="dropdown-menu dropdown-menu-right rightDropdown" *dropdownMenu aria-labelledby="simple-dropdown">
+        <div class="dropdown-header text-center"><strong>Account</strong></div>
+        <a class="dropdown-item" (click)="userProfile()"><i class="fa fa-user"></i> Profile</a>
+        <a class="dropdown-item" data-toggle="modal" (click)="showChangePasswordDialog()"><i class="fa fa-key"></i>
+          Change password</a>
+        <a class="dropdown-item" (click)="logout()"><i class="fa fa-lock"></i> Logout</a>
+      </div>
+    </li>
+  </ul>
+</app-header>
+<div class="app-body">
+  <app-sidebar #appSidebar [fixed]="true" [display]="'lg'" [minimized]="sidebarMinimized"
+    (minimizedChange)="toggleMinimize($event)">
+    <app-sidebar-nav [navItems]="navItems" [perfectScrollbar] [disabled]="appSidebar.minimized"></app-sidebar-nav>
+    <app-sidebar-minimizer></app-sidebar-minimizer>
+  </app-sidebar>
+  <main class="main">
+    <cui-breadcrumb>
+      <!-- Breadcrumb Menu-->
+      <!-- <li class="breadcrumb-menu d-md-down-none">
+        <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+          <a class="btn" href="#"><i class="icon-speech"></i></a>
+          <a class="btn" [routerLink]="['/dashboard']"><i class="icon-graph"></i> &nbsp;Dashboard</a>
+          <a class="btn" href="#"><i class="icon-settings"></i> &nbsp;Settings</a>
+        </div>
+      </li> -->
+    </cui-breadcrumb>
+    <div class="container-fluid">
+      <router-outlet></router-outlet>
+    </div>
+  </main>
+</div>
+<!-- <app-footer>
+  <span><a href="https://www.datasostech.com/">Powered by</a> &copy; DATASOS TECHNOLOGIES</span>
+</app-footer> -->
+<app-footer>
+  <span class="ml-auto">Powered by <a href="https://www.datasostech.com/">DATASOS TECHNOLOGIES</a></span>
+</app-footer>
+
+
+<p-toast key="commonMsg" position="top-right" [autoZIndex]="false" [style]="{'z-index': 10001}"></p-toast>
+
+<div *ngIf='isNeedToRenderUIModal'>
+  <app-ui-modal [isNeedToRenderUIModal]='isNeedToRenderUIModal' [displayHeader]='displayHeader'
+    [UIModalStyle]="{width: '35vw'}" (closeUIModalEvent)="closeUIModal()">
+    <app-change-password [loggedInUserDataId]="loggedInUserDataId"
+      (closeChangePasswordUIModalEvent)='closeUIModal($event)'>
+    </app-change-password>
+  </app-ui-modal>
+</div>

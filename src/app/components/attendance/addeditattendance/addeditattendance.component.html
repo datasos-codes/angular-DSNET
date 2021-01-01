@@ -1,0 +1,68 @@
+<form [formGroup]="addEditAttendanceFrm" (ngSubmit)="onSubmitaddEditAttendanceFrm()">
+    <div class="row">
+        <div class="form-group col-md-6 p-dropdownStyle">
+            <label>Select Employee<span class="asteriskRequiredColor">*</span> :</label>
+            <p-dropdown formControlName="employeeId" [options]="employeeList" [filter]="true"
+                placeholder="Employee name" [ngModel]="attendanceObj.employeeId"
+                [ngClass]="{ 'is-invalid': submitted && f.employeeId.errors }"></p-dropdown>
+            <div *ngIf="submitted && f.employeeId.errors" class="validationErrorMsg">
+                <div *ngIf="f.employeeId.errors.required">Employee is required</div>
+            </div>
+        </div>
+        <div class="form-group col-md-6">
+            <label>Select Date<span class="asteriskRequiredColor">*</span> :</label>
+            <input type="text" class="form-control" placeholder="Enter Date" bsDatepicker formControlName="tDate"
+                [maxDate]='maxDate' [ngClass]="{ 'is-invalid': submitted && f.tDate.errors }"
+                [ngModel]="attendanceObj.tDate" onkeydown="return false" [daysDisabled]="[0]"
+                [bsConfig]="{ dateInputFormat: 'YYYY-MM-DD', containerClass: 'theme-red',isAnimated: true , returnFocusToInput: true}" />
+            <div *ngIf="submitted && f.tDate.errors" class="validationErrorMsg">
+                <div *ngIf="f.tDate.errors.required">Date is required</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="form-group col-sm-6 timePickerStyle">
+            <label>Login Time :</label>
+            <p-calendar [timeOnly]="true" [style]="{'width':'100%'}" hourFormat="12" [inputStyle]="{'width':'100%'}"
+                class="timePickerInputtext" placeholder="Login Time" formControlName="AloginTime"
+                [ngModel]="attendanceObj.AloginTime">
+            </p-calendar>
+        </div>
+        <div class="form-group col-sm-6 timePickerStyle">
+            <label>Logout Time :</label>
+            <p-calendar [timeOnly]="true" [style]="{'width':'100%'}" hourFormat="12" [inputStyle]="{'width':'100%'}"
+                class="timePickerInputtext" placeholder="Logout Time" formControlName="AlogoutTime"
+                [ngModel]="attendanceObj.AlogoutTime">
+            </p-calendar>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="form-group col-sm-6">
+            <label>Reason :</label>
+            <textarea type="text" class="form-control textarea-size" formControlName="comments" name="comments"
+                placeholder="Enter Reason" rows="3" cols="3" [ngModel]="attendanceObj.comments"
+                [ngClass]="{ 'is-invalid': submitted && f.comments.errors }"></textarea>
+        </div>
+        <div class="col-md-6 p-dropdownStyle">
+            <label>Status :</label>
+            <p-dropdown formControlName="isActive" [style]="{'width':'100%'}" [options]="IsActiveTypes" [filter]="true"
+                [ngModel]="attendanceObj.isActive ? attendanceObj.isActive : selectedIsActiveType"
+                [ngClass]="{ 'is-invalid': submitted && f.isActive.errors }">
+            </p-dropdown>
+            <div *ngIf="submitted && f.isActive.errors" class="validationErrorMsg">
+                <div *ngIf="f.isActive.errors.required">Status is required.</div>
+            </div>
+        </div>
+    </div>
+    <div class="">
+        <button *ngIf="!loading" type="submit" class="btn btn-sm btn-primary m-1">
+            <span><i class="fa fa-dot-circle-o"></i>&nbsp;Save</span>
+        </button>
+        <button *ngIf="loading" class="btn btn-sm btn-primary m-1" color="primary" type="button" disabled>
+            <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+            <span>Loading...</span>
+        </button>
+    </div>
+</form>

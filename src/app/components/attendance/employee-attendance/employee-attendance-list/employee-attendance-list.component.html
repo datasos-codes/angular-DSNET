@@ -1,0 +1,115 @@
+<div *ngIf='attendanceModulePermission?.allowed === true' class="row table-card-style">
+    <div *ngIf="filterFrm" class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <i class="fa fa-line-chart"></i><strong>Attendances</strong>&nbsp;<small>Details</small>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="callout callout-info">
+                            <form [formGroup]="filterFrm" class="form-inline">
+                                <div class="form-group">
+                                    <strong class="text-muted mr-3">Filter By: </strong>
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" size="25" class="form-control mr-3"
+                                        placeholder="-- Select Date --" bsDaterangepicker formControlName="range"
+                                        [bsConfig]="{ dateInputFormat: 'YYYY-MM-DD', containerClass: 'theme-red' }"
+                                        (ngModelChange)="geAllAttendanceList()" onkeydown="return false" />
+                                </div>
+                                <div class="form-group">
+                                    <button type="reset" class="btn btn-sm btn-danger" (click)="clearFilter()">
+                                        <i class="fa fa-ban"></i> Reset
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="primeng-datatable">
+                    <p-table #attendancetable [value]="attendanceData" [paginator]="true" [rows]="10"
+                        [showCurrentPageReport]="true" styleClass="ui-table-primedatatable" [rowHover]="true"
+                        [rowsPerPageOptions]="[10,25,50]" [filterDelay]="0"
+                        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                        [scrollable]="true" scrollHeight="auto"
+                        (sortFunction)="customSortForEmployeeAttendancesTable($event)" [customSort]="true"
+                        [globalFilterFields]="['fullName','date','isActive','createdby','modifiedBy']">
+                        <!-- Top bar -->
+                        <ng-template pTemplate="caption">
+                            <div class="ui-helper-clearfix" style="text-align: left">
+                                <input type="text" class="globalSearchTxt"
+                                    (input)="attendancetable.filterGlobal($event.target.value, 'contains')"
+                                    placeholder="Search" />
+                            </div>
+                        </ng-template>
+                        <!-- Table Header -->
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th style="width: 3em;" *ngIf='(dynamicButtonsobj.View) ? true : false'>Action</th>
+                                <th pSortableColumn="date" style="width: 8em;">Date
+                                    <p-sortIcon field="date"></p-sortIcon>
+                                </th>
+                                <th style="width: 6em;">Login Time</th>
+                                <th style="width: 6em;">Logout Time</th>
+                                <th style="width: 6em;">Total Hours</th>
+                                <th pSortableColumn="isActive" style="width: 6em;">Status
+                                    <p-sortIcon field="isActive"></p-sortIcon>
+                                </th>
+                                <th pSortableColumn="createdBy" style="width: 9em;">Created By
+                                    <p-sortIcon field="createdBy"></p-sortIcon>
+                                </th>
+                                <th pSortableColumn="modifiedBy" style="width: 9em;">Modified By
+                                    <p-sortIcon field="modifiedBy"></p-sortIcon>
+                                </th>
+                            </tr>
+                        </ng-template>
+                        <!-- Table row -->
+                        <ng-template pTemplate="body" let-attendance>
+                            <tr>
+                                <td style="width: 3em;" *ngIf='(dynamicButtonsobj.View) ? true : false'>
+                                    <button type="button" class="btn btn-sm btn-info mr-1" tooltip="View"
+                                        placement="bottom" (click)="showViewEployeeAttendanceDialog(attendance)"
+                                        *ngIf='dynamicButtonsobj.View'>
+                                        <i class="fa fa-eye"></i>
+                                    </button>
+                                </td>
+                                <td style="width: 8em;">{{ attendance.date}}</td>
+                                <td style="width: 6em;">
+                                    {{attendance.loginTime | date:"hh:mm a":"+0000" }}
+                                </td>
+                                <td style="width: 6em;">
+                                    {{attendance.logoutTime | date:"hh:mm a":"+0000" }}
+                                </td>
+                                <td style="width: 6em;">{{ attendance.totalHours }}</td>
+                                <td style="width: 6em;">
+                                    <span [class]="'datatable-badge status-' + attendance.isActive">
+                                        {{attendance.isActive}}
+                                    </span>
+                                </td>
+                                <td style="width: 9em;padding-left: 8px !important;text-align: left;">
+                                    {{attendance.createdBy}}</td>
+                                <td style="width: 9em;padding-left: 8px !important;text-align: left;">
+                                    {{attendance.modifiedBy}}</td>
+                            </tr>
+                        </ng-template>
+                        <!-- No records found -->
+                        <ng-template pTemplate="emptymessage">
+                            <tr>
+                                <td colspan="10" style="text-align:center">No records found.</td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div *ngIf='isNeedToRenderUIModal'>
+    <app-ui-modal [isNeedToRenderUIModal]='isNeedToRenderUIModal' [displayHeader]='displayHeader'
+        [UIModalStyle]="{width: '20vw'}" (closeUIModalEvent)="closeUIModal()">
+        <app-viewemployee-attendance [viewAttendanceDetails]="viewAttendanceDetails">
+        </app-viewemployee-attendance>
+    </app-ui-modal>
+</div>

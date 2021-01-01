@@ -1,0 +1,203 @@
+<app-spinner></app-spinner>
+
+<div class="row multiple-row-table">
+    <div class="col-md-12">
+        <form *ngIf="addForm" class="form-horizontal" [formGroup]="addForm" (ngSubmit)="onSubmitaddTimeSheetFrm()">
+            <div class="card" formArrayName="addTimeSheetArr">
+                <div class="card-header">
+                    <i class="icon-plus"></i> <strong>Add Timesheet</strong>
+                    <div class="card-header-actions" style="height: 25px;">
+                        <button type="button" class="btn btn-sm btn-primary"
+                            (click)="router.navigate(['/timesheets']);" style="float: right;">
+                            <i class="fa fa-long-arrow-left"></i> Back
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-5">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="callout callout-info">
+                                        <strong class="text-muted">Select Date</strong>
+                                        <form *ngIf="selectDateform" [formGroup]="selectDateform">
+                                            <input type="text" class="form-control" placeholder="Select Date"
+                                                bsDatepicker onkeydown="return false" formControlName="date"
+                                                [bsConfig]="{ dateInputFormat: 'DD-MM-YYYY', containerClass: 'theme-red',isAnimated: true , returnFocusToInput: true}" />
+                                        </form>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="callout callout-info">
+                                        <strong class="text-muted">Add Rows</strong>
+                                        <form *ngIf="addMoreRowsFrm" [formGroup]="addMoreRowsFrm">
+                                            <input type="number" class="form-control" placeholder="Only Number" #addrow
+                                                id="addrow" (keydown.enter)="addNewRows(addrow.value,$event)"
+                                                formControlName="rowNumber" pattern="/^-?\d+\.?\d*$/"
+                                                onKeyPress="if(this.value.length==2) return false;" min="0" max="99" />
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div [ngClass]="{'table-outline':checkBrowser}">
+                        <table class="table table-responsive-sm table-hover mb-0">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th class="text-center" style="width: 2em;"></th>
+                                    <th style="width: 10em;">Project</th>
+                                    <th style="width: 10em;">Module</th>
+                                    <th style="width: 10em;">Task</th>
+                                    <th style="width: 10em;">Billable Hours</th>
+                                    <th style="width: 1em;"></th>
+                                    <th style="width: 10em;">Non Billable Hours</th>
+                                    <th style="width: 9em;">Start Time</th>
+                                    <th style="width: 9em;">Finish Time</th>
+                                    <th style="width: 5em;">Total Time</th>
+                                    <th style="width: 10em;">Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <ng-container *ngFor="let timesheetData of t.controls; let i=index" [formGroupName]="i">
+                                    <tr>
+                                        <td class="text-center" style="width: 2em;">
+                                            <button *ngIf="i > 0" type="button" class="btn btn-sm btn-danger"
+                                                (click)="onRemoveRow(i)">
+                                                <i class="fa fa-trash"></i>
+                                            </button>
+                                        </td>
+                                        <td style="width: 10em;max-width: 10em;" class="p-dropdownStyle">
+                                            <p-dropdown id="project_{{i}}"
+                                                [style]="{'width':'100%','min-width':'100%','border':'1px solid #a6a6a6'}"
+                                                [options]="projects" [filter]="true" placeholder="Project"
+                                                formControlName="projectId"
+                                                (onChange)='fetchModuleBasedOnProject($event.value,i)'>
+                                            </p-dropdown>
+                                            <div class="small text-muted validationErrorMsg"
+                                                *ngIf="submitted && timesheetData['controls'].projectId.errors">
+                                                <div *ngIf="timesheetData['controls'].projectId.errors?.required">
+                                                    Project is required.
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td style="width: 10em;max-width: 10em;" class="p-dropdownStyle">
+                                            <p-dropdown id="module_{{i}}"
+                                                [style]="{'width':'100%','min-width':'100%','border':'1px solid #a6a6a6'}"
+                                                [options]="timesheetData['controls'].moduleNameOptions.value"
+                                                [filter]="true" placeholder="Module" formControlName="moduleId">
+                                            </p-dropdown>
+                                            <div class="small text-muted validationErrorMsg"
+                                                *ngIf="submitted && timesheetData['controls'].moduleId.errors">
+                                                <div *ngIf="timesheetData['controls'].moduleId.errors?.required">
+                                                    Module is required.
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td style="width: 10em;" class="ui-inputtext-style form-group">
+                                            <input id="task_{{i}}" type="text" pInputText placeholder="Task"
+                                                formControlName="task">
+                                            <div class="small text-muted validationErrorMsg"
+                                                *ngIf="submitted && timesheetData['controls'].task.errors">
+                                                <div *ngIf="timesheetData['controls'].task.errors?.required">
+                                                    Task is required.
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td style="width: 10em;" class="ui-inputtext-style form-group">
+                                            <input id="bh_{{i}}" type="text" pInputText formControlName="billableHours"
+                                                placeholder="(Ex: 1/1.5)" maxlength="5">
+                                            <div class="small text-muted validationErrorMsg"
+                                                *ngIf="submitted && timesheetData['controls'].billableHours.errors">
+                                                <div *ngIf="timesheetData['controls'].billableHours.errors?.required">
+                                                    Billable hours is required.
+                                                </div>
+                                                <div *ngIf="timesheetData['controls'].billableHours.errors?.pattern">
+                                                    Invalid input.
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td style="width: 1em;">+</td>
+                                        <td style="width: 10em;" class="ui-inputtext-style form-group">
+                                            <input id="nbh_{{i}}" type="text" pInputText placeholder="(Ex: 0/1.5)"
+                                                formControlName="nonBillableHours" maxlength="5">
+                                            <div class="small text-muted validationErrorMsg"
+                                                *ngIf="submitted && timesheetData['controls'].nonBillableHours.errors">
+                                                <div
+                                                    *ngIf="timesheetData['controls'].nonBillableHours.errors?.required">
+                                                    Non billable hours is required.
+                                                </div>
+                                                <div *ngIf="timesheetData['controls'].nonBillableHours.errors?.pattern">
+                                                    Invalid input.
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td style="width: 9em;" class="ui-inputtext-style timePickerStyle">
+                                            <p-calendar id="st_{{i}}" [timeOnly]="true" placeholder="Start Time"
+                                                formControlName="startTime" [style]="{'width':'100%'}"
+                                                [inputStyle]="{'width':'100%'}" hourFormat="12"
+                                                (onClickOutside)='validateTime(i)'>
+                                            </p-calendar>
+                                            <div class="small text-muted validationErrorMsg"
+                                                *ngIf="submitted && timesheetData['controls'].startTime.errors">
+                                                <div *ngIf="timesheetData['controls'].startTime.errors?.required">
+                                                    Start time is required.
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td style="width: 9em;" class="ui-inputtext-style timePickerStyle">
+                                            <p-calendar id="ft_{{i}}" [timeOnly]="true" placeholder="Finish Time"
+                                                formControlName="finishTime" [style]="{'width':'100%'}"
+                                                [inputStyle]="{'width':'100%'}" hourFormat="12"
+                                                (onClickOutside)='validateTime(i)'>
+                                            </p-calendar>
+                                            <div class="small text-muted validationErrorMsg"
+                                                *ngIf="submitted && timesheetData['controls'].finishTime.errors">
+                                                <div *ngIf="timesheetData['controls'].finishTime.errors?.required">
+                                                    Finish time is required.
+                                                </div>
+                                            </div>
+                                            <div *ngIf="
+                                            timesheetData['controls'].startTime.value && 
+                                            timesheetData['controls'].finishTime.value && 
+                                            timesheetData['controls'].finishTime.status === 'INVALID'">
+                                                <div class="small text-muted validationErrorMsg">
+                                                    Finish time must be greater than start time.
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td style="width: 5em;" class="ui-inputtext-style form-group">
+                                            <input id="timedifference{{i}}" type="text" pInputText
+                                                placeholder="Total Time" formControlName="timedifference" disabled>
+                                        </td>
+                                        <td style="width: 10em;" class="ui-inputtext-style">
+                                            <input id="description_{{i}}" type="text" pInputText
+                                                placeholder="Description" formControlName="description">
+                                        </td>
+                                    </tr>
+                                </ng-container>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card-footer" style="padding: 0.4rem !important;">
+                    <button type="button" class="btn btn-sm btn-info mr-2" (click)='addMoreRows()'>
+                        <i class="fa fa-plus"></i>
+                    </button>
+                    <button *ngIf="!loading" type="submit" class="btn btn-sm btn-success mr-2">
+                        <i class="fa fa-dot-circle-o"></i> Save
+                    </button>
+                    <button *ngIf="loading" class="btn btn-sm btn-primary m-1" color="primary" type="button" disabled>
+                        <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+                        <span> Loading...</span>
+                    </button>
+                    <button type="reset" class="btn btn-sm btn-danger" (click)="resetForm()">
+                        <i class="fa fa-ban"></i> Reset
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<p-toast key="commonMsg" position="top-right" [autoZIndex]="false" [style]="{'z-index': 10001}"></p-toast>

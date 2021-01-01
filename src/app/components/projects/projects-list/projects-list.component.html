@@ -1,0 +1,343 @@
+<!-- Project Portion Start -->
+<div *ngIf='perojectModulePermission?.allowed === true' class="row table-card-style">
+    <div *ngIf="filterFrm" class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <i class="fa fa-file"></i><strong>Projects</strong> <small> Details</small>
+                <div *ngIf='dynamicButtonsobj.Add' class="card-header-actions" style="height: 25px;">
+                    <button type="button" class="btn btn-sm btn-primary" (click)="showProjectDialog()">
+                        <i class="fa fa-plus"></i> Add
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="callout callout-info">
+                            <form [formGroup]="filterFrm" class="form-inline">
+                                <div class="form-group">
+                                    <strong class="text-muted mr-3">Filter By: </strong>
+                                </div>
+                                <div class="form-group mr-3 p-dropdownStyle">
+                                    <p-dropdown formControlName="filterByCustomer" [options]="customersList"
+                                        [filter]="true" placeholder="Customer Name"
+                                        (onChange)="filterByCustomerName($event.value)">
+                                    </p-dropdown>
+                                </div>
+                                <div class="form-group">
+                                    <button type="reset" class="btn btn-sm btn-danger" (click)="clearFilter()">
+                                        <i class="fa fa-ban"></i> Reset
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="primeng-datatable">
+                    <p-table #projectTable [value]="projectsData" [paginator]="true" [rows]="10"
+                        [showCurrentPageReport]="true" styleClass="ui-table-primedatatable" [rowHover]="true"
+                        [rowsPerPageOptions]="[10,25,50]" [filterDelay]="0"
+                        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                        [(selection)]="selectedProjectsForCheckBox" [scrollable]="true" scrollHeight="auto"
+                        [globalFilterFields]="['name','customerName','typeId','description','isActive','createdBy','modifiedBy']">
+                        <!-- Top bar -->
+                        <ng-template pTemplate="caption">
+                            <div class="ui-helper-clearfix" style="text-align: left">
+                                <!-- Export to excel -->
+                                <button type="button" class="btn btn-sm btn-success mr-2"
+                                    (click)="exportExcelProjects(selectedProjectsForCheckBox)"
+                                    *ngIf='dynamicButtonsobj.ExportToExcel'>
+                                    <i class="fa fa-file-excel-o"></i>
+                                    EXCEL
+                                </button>
+                                <!-- Delete multiple -->
+                                <button type="button" class="btn btn-sm btn-danger"
+                                    (click)="showConfirmForDeleteProjects(selectedProjectsForCheckBox)"
+                                    *ngIf='dynamicButtonsobj.MultipleDelete'>
+                                    <i class="fa fa-times"></i>&nbsp;DELETE
+                                </button>
+                                <!-- globle search -->
+                                <input type="text" class="globalSearchTxt"
+                                    (input)="projectTable.filterGlobal($event.target.value, 'contains')"
+                                    placeholder="Search" />
+                            </div>
+                        </ng-template>
+                        <!-- Table Header -->
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th style="width:2em"
+                                    *ngIf='dynamicButtonsobj.ExportToExcel || dynamicButtonsobj.MultipleDelete'>
+                                    <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                                </th>
+                                <th style="width:5em" *ngIf='(dynamicButtonsobj.Edit
+                                || dynamicButtonsobj.SingleDelete) ? true : false'>Action</th>
+                                <th pSortableColumn="name" style="width:9em !important;"> Project
+                                    <p-sortIcon field="name"></p-sortIcon>
+                                </th>
+                                <th pSortableColumn="customerName" style="width:9em !important;">
+                                    Customer
+                                    <p-sortIcon field="customerName"></p-sortIcon>
+                                </th>
+                                <th pSortableColumn="typeId" style="width:6em !important;">Type
+                                    <p-sortIcon field="typeId"></p-sortIcon>
+                                </th>
+                                <th pSortableColumn="description" style="width:9em !important;">
+                                    Description
+                                    <p-sortIcon field="description"></p-sortIcon>
+                                </th>
+                                <th pSortableColumn="isActive" style="width:6em !important;">Status
+                                    <p-sortIcon field="isActive"></p-sortIcon>
+                                </th>
+                                <th pSortableColumn="createdBy" style="width:9em !important;">Created By
+                                    <p-sortIcon field="createdBy"></p-sortIcon>
+                                </th>
+                                <th pSortableColumn="modifiedBy" style="width:9em !important;">Modified
+                                    By
+                                    <p-sortIcon field="modifiedBy"></p-sortIcon>
+                                </th>
+                                <!-- <th style="width:6em;">Test</th> -->
+                            </tr>
+                        </ng-template>
+                        <!-- Table row -->
+                        <ng-template pTemplate="body" let-project>
+                            <tr>
+                                <td style="width:2em"
+                                    *ngIf='dynamicButtonsobj.ExportToExcel || dynamicButtonsobj.MultipleDelete'>
+                                    <p-tableCheckbox [value]="project"></p-tableCheckbox>
+                                </td>
+                                <td style="width:5em" *ngIf='(dynamicButtonsobj.Edit
+                                || dynamicButtonsobj.SingleDelete) ? true : false'>
+                                    <button type="button" class="btn btn-sm btn-primary mr-1" tooltip="Edit"
+                                        placement="bottom" (click)="showProjectDialog(project)"
+                                        *ngIf='dynamicButtonsobj.Edit'>
+                                        <i class="fa fa-edit"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-sm btn-danger" tooltip="Delete"
+                                        placement="bottom" (click)="showConfirmForDeleteProjects(project.id)"
+                                        *ngIf='dynamicButtonsobj.SingleDelete'>
+                                        <i class="fa fa-trash-o" aria-hidden="true"></i>
+                                    </button>
+                                </td>
+                                <td style="width:9em !important;text-align:left;padding-left:8px !important;">
+                                    {{project.name}}</td>
+                                <td style="width:9em !important;text-align:left;padding-left:8px !important;">
+                                    {{project.customerName}}</td>
+                                <td style="width:6em !important;">{{project.typeId}}</td>
+                                <td style="width:9em !important;text-align:left;padding-left:8px !important;">
+                                    {{project.description}}</td>
+                                <td style="width:6em !important;">
+                                    <span [class]="'datatable-badge status-' + project.isActive">
+                                        {{project.isActive}}
+                                    </span>
+                                </td>
+                                <td style="width:9em !important;text-align:left;padding-left:8px !important;">
+                                    {{project.createdBy}}</td>
+                                <td style="width:9em !important;text-align:left;padding-left:8px !important;">
+                                    {{project.modifiedBy}}</td>
+                                <!-- <td style="width: 6em;">Test</td> -->
+                            </tr>
+                        </ng-template>
+                        <!-- No records found -->
+                        <ng-template pTemplate="emptymessage">
+                            <tr>
+                                <td colspan="9" style="text-align:center">No records found.</td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<p-toast key="commonMsg" position="top-right" [autoZIndex]="false" [style]="{'z-index': 10001}"></p-toast>
+
+<p-toast position="center" key="deleteProjectKey" (onClose)="onReject()" [modal]="true" [autoZIndex]="false"
+    [style]="{'z-index': 10001}">
+    <ng-template let-message pTemplate="message">
+        <div style="text-align: center">
+            <i class="pi pi-exclamation-triangle" style="font-size: 3em"></i>
+            <h3>{{message.summary}}</h3>
+            <p>{{message.detail}}</p>
+        </div>
+        <div class="ui-g ui-fluid">
+            <div class="ui-g-6">
+                <button type="button" pButton (click)="deleteProjectDetails(message.data)" label="Yes"
+                    class="ui-button-success"></button>
+            </div>
+            <div class="ui-g-6">
+                <button type="button" pButton (click)="onReject()" label="No" class="ui-button-secondary"></button>
+            </div>
+        </div>
+    </ng-template>
+</p-toast>
+
+<!-- Project Portion End -->
+
+<!-- Module Portion Start -->
+
+<div class="row table-card-style">
+    <div *ngIf="filterProjectByModuleFrm" class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <i class="fa fa-file"></i><strong>Module</strong>&nbsp;<small>Details</small>
+                <div class="card-header-actions" style="height: 25px;">
+                    <button type="button" class="btn btn-sm btn-primary" (click)="showProjectModuleDialog()">
+                        <i class="fa fa-plus"></i>&nbsp;Add
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="callout callout-info">
+                            <form [formGroup]="filterProjectByModuleFrm" class="form-inline">
+                                <div class="form-group">
+                                    <strong class="text-muted mr-3">Filter By: </strong>
+                                </div>
+                                <div class="form-group mr-3 p-dropdownStyle">
+                                    <p-dropdown formControlName="filterByProjectModule" [options]="onlyProjectName"
+                                        [filter]="true" placeholder="Project Name"
+                                        (onChange)="onChangefilterByProjectModule($event.value)">
+                                    </p-dropdown>
+                                </div>
+                                <div class="form-group">
+                                    <button type="reset" class="btn btn-sm btn-danger" (click)="clearFilterModuleFrm()">
+                                        <i class="fa fa-ban"></i> Reset
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="primeng-datatable">
+                    <p-table #projectModuleTable [value]="projectsModuleData" [paginator]="true" [rows]="5"
+                        [showCurrentPageReport]="true" styleClass="ui-table-primedatatable" [rowHover]="true"
+                        [rowsPerPageOptions]="[5,10]" [filterDelay]="0"
+                        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                        [(selection)]="selectedProjectModuleForCheckBox" [scrollable]="true" scrollHeight="auto"
+                        [globalFilterFields]="['projectName','moduleName','description','isActive','createdBy','modifiedBy']">
+                        <!-- Top bar -->
+                        <ng-template pTemplate="caption">
+                            <div class="ui-helper-clearfix" style="text-align: left">
+                                <!-- Delete multiple -->
+                                <button type="button" class="btn btn-sm btn-danger"
+                                    (click)="showConfirmForDeleteProjectModule(selectedProjectModuleForCheckBox)">
+                                    <i class="fa fa-times"></i>&nbsp;DELETE
+                                </button>
+                                <!-- globle search -->
+                                <input type="text" class="globalSearchTxt"
+                                    (input)="projectModuleTable.filterGlobal($event.target.value, 'contains')"
+                                    placeholder="Search" />
+                            </div>
+                        </ng-template>
+                        <!-- Table Header -->
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th style="width:2em">
+                                    <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                                </th>
+                                <th style="width:5em">Action</th>
+                                <th pSortableColumn="projectName" style="width:9em !important;"> Project
+                                    <p-sortIcon field="projectName"></p-sortIcon>
+                                </th>
+                                <th pSortableColumn="moduleName" style="width:9em !important;">
+                                    Module
+                                    <p-sortIcon field="moduleName"></p-sortIcon>
+                                </th>
+                                <th pSortableColumn="description" style="width:9em !important;">
+                                    Description
+                                    <p-sortIcon field="description"></p-sortIcon>
+                                </th>
+                                <th pSortableColumn="isActive" style="width:6em !important;">Status
+                                    <p-sortIcon field="isActive"></p-sortIcon>
+                                </th>
+                                <th pSortableColumn="createdBy" style="width:9em !important;">Created By
+                                    <p-sortIcon field="createdBy"></p-sortIcon>
+                                </th>
+                                <th pSortableColumn="modifiedBy" style="width:9em !important;">Modified
+                                    By
+                                    <p-sortIcon field="modifiedBy"></p-sortIcon>
+                                </th>
+                            </tr>
+                        </ng-template>
+                        <!-- Table row -->
+                        <ng-template pTemplate="body" let-projectmodule>
+                            <tr>
+                                <td style="width:2em">
+                                    <p-tableCheckbox [value]="projectmodule"></p-tableCheckbox>
+                                </td>
+                                <td style="width:5em">
+                                    <button type="button" class="btn btn-sm btn-primary mr-1" tooltip="Edit"
+                                        placement="bottom" (click)="showProjectModuleDialog(projectmodule)">
+                                        <i class="fa fa-edit"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-sm btn-danger" tooltip="Delete"
+                                        placement="bottom"
+                                        (click)="showConfirmForDeleteProjectModule(projectmodule.id)">
+                                        <i class="fa fa-trash-o" aria-hidden="true"></i>
+                                    </button>
+                                </td>
+                                <td style="width:9em !important;text-align:left;padding-left:8px !important;">
+                                    {{projectmodule.projectName}}</td>
+                                <td style="width:9em !important;text-align:left;padding-left:8px !important;">
+                                    {{projectmodule.moduleName}}</td>
+                                <td style="width:9em !important;text-align:left;padding-left:8px !important;">
+                                    {{projectmodule.description}}</td>
+                                <td style="width:6em !important;">
+                                    <span [class]="'datatable-badge status-' + projectmodule.isActive">
+                                        {{projectmodule.isActive}}
+                                    </span>
+                                </td>
+                                <td style="width:9em !important;text-align:left;padding-left:8px !important;">
+                                    {{projectmodule.createdBy}}</td>
+                                <td style="width:9em !important;text-align:left;padding-left:8px !important;">
+                                    {{projectmodule.modifiedBy}}</td>
+                            </tr>
+                        </ng-template>
+                        <!-- No records found -->
+                        <ng-template pTemplate="emptymessage">
+                            <tr>
+                                <td colspan="6" style="text-align:center">No records found.</td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<p-toast position="center" key="deleteProjectModuleKey" (onClose)="onRejectModuleDialog()" [modal]="true"
+    [autoZIndex]="false" [style]="{'z-index': 10001}">
+    <ng-template let-message pTemplate="message">
+        <div style="text-align: center">
+            <i class="pi pi-exclamation-triangle" style="font-size: 3em"></i>
+            <h3>{{message.summary}}</h3>
+            <p>{{message.detail}}</p>
+        </div>
+        <div class="ui-g ui-fluid">
+            <div class="ui-g-6">
+                <button type="button" pButton (click)="deleteProjectModuleDetails(message.data)" label="Yes"
+                    class="ui-button-success"></button>
+            </div>
+            <div class="ui-g-6">
+                <button type="button" pButton (click)="onRejectModuleDialog()" label="No"
+                    class="ui-button-secondary"></button>
+            </div>
+        </div>
+    </ng-template>
+</p-toast>
+<!-- Module Portion End -->
+
+<div *ngIf='isNeedToRenderUIModal'>
+    <app-ui-modal [isNeedToRenderUIModal]='isNeedToRenderUIModal' [displayHeader]='displayHeader'
+        [UIModalStyle]="{width: '35vw'}" (closeUIModalEvent)="closeUIModal()">
+        <app-addeditproject [projectListObj]="projectListObj" (closeProjectUIModalEvent)='closeUIModal($event)'
+            *ngIf='isOpenProjectUIDialog'></app-addeditproject>
+        <app-add-edit-module [projectModuleListObj]="projectModuleListObj"
+            (closeProjectModuleUIModalEvent)='closeUIModal($event)' [onlyProjectName]='onlyProjectName'
+            *ngIf='isOpenProjectModuleUIDialog'>
+        </app-add-edit-module>
+    </app-ui-modal>
+</div>

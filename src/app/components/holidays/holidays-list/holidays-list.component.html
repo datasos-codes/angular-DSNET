@@ -1,0 +1,140 @@
+<div *ngIf='holidayModulePermission?.allowed === true' class="row table-card-style">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <i class="fa fa-calendar"></i><strong>Holidays</strong>&nbsp;<small>Details</small>
+                <div *ngIf='dynamicButtonsobj.Add' class="card-header-actions" style="height: 25px;">
+                    <button type="button" class="btn btn-sm btn-primary" (click)="showHolidayDialog()"><i
+                            class="fa fa-plus"></i>&nbsp;Add
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="primeng-datatable">
+                    <p-table #holidayTable [value]="holidayData" [paginator]="true" [rows]="10"
+                        [showCurrentPageReport]="true" styleClass="ui-table-primedatatable" [rowHover]="true"
+                        [rowsPerPageOptions]="[10,25,50]" [filterDelay]="0"
+                        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                        [(selection)]="selectedHolidayForCheckBox" [scrollable]="true" scrollHeight="auto"
+                        (sortFunction)="customSortForEmployeeHolidayTable($event)" [customSort]="true"
+                        [globalFilterFields]="['title','date','description']">
+                        <!-- Top bar -->
+                        <ng-template pTemplate="caption">
+                            <div class="ui-helper-clearfix" style="text-align: left">
+                                <!-- Export to excel -->
+                                <button type="button" class="btn btn-sm btn-success mr-2"
+                                    (click)="exportExcelHolidays(selectedHolidayForCheckBox)"
+                                    *ngIf='dynamicButtonsobj.ExportToExcel'>
+                                    <i class="fa fa-file-excel-o"></i>
+                                    EXCEL
+                                </button>
+                                <!-- Delete multiple -->
+                                <button type="button" class="btn btn-sm btn-danger"
+                                    (click)="showConfirmForDeleteHolidays(selectedHolidayForCheckBox)"
+                                    *ngIf='dynamicButtonsobj.MultipleDelete'>
+                                    <i class="fa fa-times"></i>&nbsp;DELETE
+                                </button>
+                                <!-- globle search -->
+                                <input type="text" style="float:right" class="globalSearchTxt"
+                                    (input)="holidayTable.filterGlobal($event.target.value, 'contains')"
+                                    placeholder="Search" />
+                            </div>
+                        </ng-template>
+                        <!-- Table Header -->
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th style="width: 2em"
+                                    *ngIf='dynamicButtonsobj.ExportToExcel || dynamicButtonsobj.MultipleDelete'>
+                                    <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                                </th>
+                                <th style="width: 5em;" *ngIf='(dynamicButtonsobj.Edit
+                                || dynamicButtonsobj.SingleDelete) ? true : false'>
+                                    Action
+                                </th>
+                                <th pSortableColumn="title" style="width: 10em;">Title
+                                    <p-sortIcon field="title"></p-sortIcon>
+                                </th>
+                                <th pSortableColumn="date" style="width: 8em;">Date
+                                    <p-sortIcon field="date">
+                                    </p-sortIcon>
+                                </th>
+                                <th pSortableColumn="day" style="width: 8em;">Day
+                                    <p-sortIcon field="day">
+                                    </p-sortIcon>
+                                </th>
+                                <th pSortableColumn="description" style="width: 11em;">Description
+                                    <p-sortIcon field="description"></p-sortIcon>
+                                </th>
+                            </tr>
+                        </ng-template>
+                        <!-- Table row -->
+                        <ng-template pTemplate="body" let-holiday>
+                            <tr>
+                                <td style="width: 2em"
+                                    *ngIf='dynamicButtonsobj.ExportToExcel || dynamicButtonsobj.MultipleDelete'>
+                                    <p-tableCheckbox [value]="holiday"></p-tableCheckbox>
+                                </td>
+                                <td style="width: 5em;" *ngIf='(dynamicButtonsobj.Edit
+                                || dynamicButtonsobj.SingleDelete) ? true : false'>
+                                    <button type="button" class="btn btn-sm btn-primary mr-1" tooltip="Edit"
+                                        placement="bottom" (click)="showHolidayDialog(holiday)"
+                                        *ngIf='dynamicButtonsobj.Edit'>
+                                        <i class="fa fa-edit"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-sm btn-danger" tooltip="Delete"
+                                        placement="bottom" (click)="showConfirmForDeleteHolidays(holiday.id)"
+                                        *ngIf='dynamicButtonsobj.SingleDelete'>
+                                        <i class="fa fa-trash-o" aria-hidden="true"></i>
+                                    </button>
+                                </td>
+                                <td style="width: 10em;padding-left: 8px !important;text-align: left;">{{holiday.title}}
+                                </td>
+                                <td style="width: 8em;">{{holiday.date}}</td>
+                                <td style="width: 8em;">{{holiday.day}}</td>
+                                <td style="width: 11em;padding-left: 8px !important;text-align: left;">
+                                    {{holiday.description}}</td>
+                            </tr>
+                        </ng-template>
+                        <!-- No records found -->
+                        <ng-template pTemplate="emptymessage">
+                            <tr>
+                                <td colspan="8" style="text-align:center">No records found.</td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<p-toast key="commonMsg" position="top-right" [autoZIndex]="false" [style]="{'z-index': 10001}"></p-toast>
+
+<p-toast position="center" key="deleteHolidayKey" (onClose)="onReject()" [modal]="true" [autoZIndex]="false"
+    [style]="{'z-index': 10001}">
+    <ng-template let-message pTemplate="message">
+        <div style="text-align: center">
+            <i class="pi pi-exclamation-triangle" style="font-size: 3em"></i>
+            <h3>{{message.summary}}</h3>
+            <p>{{message.detail}}</p>
+        </div>
+        <div class="ui-g ui-fluid">
+            <div class="ui-g-6">
+                <button type="button" pButton (click)="deleteHolidayDetails(message.data)" label="Yes"
+                    class="ui-button-success"></button>
+            </div>
+            <div class="ui-g-6">
+                <button type="button" pButton (click)="onReject()" label="No" class="ui-button-secondary"></button>
+            </div>
+        </div>
+    </ng-template>
+</p-toast>
+
+<div *ngIf='isNeedToRenderUIModal'>
+    <app-ui-modal [isNeedToRenderUIModal]='isNeedToRenderUIModal' [displayHeader]='displayHeader'
+        [UIModalStyle]="{width: '35vw'}" (closeUIModalEvent)="closeUIModal()">
+        <app-addeditholiday [holidayListObj]="holidayListObj" [holidayTitlesArr]='holidayTitles'
+            (closeHolidayUIModalEvent)='closeUIModal($event)'>
+        </app-addeditholiday>
+    </app-ui-modal>
+</div>

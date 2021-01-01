@@ -1,0 +1,46 @@
+<form [formGroup]="empAddEditMobileFrm" (ngSubmit)="onSubmitEmpAddEditMobileFrm()">
+    <div class="form-group">
+        <label>Phone Number<span class="asteriskRequiredColor">*</span> :</label>
+        <input type="text" class="form-control" formControlName="phoneNo" [ngModel]='employeeMobile.phoneNo'
+            name="phoneNo" placeholder="Enter phone number" [ngClass]="{ 'is-invalid': submitted && f.phoneNo.errors }"
+            (keypress)="onlyNumberKey($event)" onpaste="return false" minlength="10" maxlength="15">
+        <div *ngIf="submitted && f.phoneNo.errors" class="validationErrorMsg">
+            <div *ngIf="f.phoneNo.errors.required">Phone number is required</div>
+            <div *ngIf="f.phoneNo.errors.pattern || f.phoneNo.errors.minlength">
+                Phone number requied atleast 10 digits.</div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="row">
+            <div class="col-md-6 p-dropdownStyle">
+                <label>Phone Number Type :</label>
+                <p-dropdown formControlName="typeId" [style]="{'width':'100%'}" [options]="PhoneNumberTypes"
+                    [filter]="true" [ngModel]="employeeMobile.typeId ? employeeMobile.typeId : selectedPhoneNumberType"
+                    [ngClass]="{ 'is-invalid': submitted && f.typeId.errors }">
+                </p-dropdown>
+                <div *ngIf="submitted && f.typeId.errors" class="validationErrorMsg">
+                    <div *ngIf="f.typeId.errors.required">Phone Number Type is required.</div>
+                </div>
+            </div>
+            <div class="col-md-6 p-dropdownStyle">
+                <label>Status :</label>
+                <p-dropdown formControlName="isActive" [style]="{'width':'100%'}" [options]="IsActiveTypes"
+                    [filter]="true" [ngModel]="employeeMobile.isActive ? employeeMobile.isActive : selectedIsActiveType"
+                    [ngClass]="{ 'is-invalid': submitted && f.isActive.errors }">
+                </p-dropdown>
+                <div *ngIf="submitted && f.isActive.errors" class="validationErrorMsg">
+                    <div *ngIf="f.isActive.errors.required">Status is required.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="">
+        <button *ngIf="!loading" type="submit" class="btn btn-sm btn-primary m-1">
+            <span><i class="fa fa-dot-circle-o"></i>&nbsp;Save</span>
+        </button>
+        <button *ngIf="loading" class="btn btn-sm btn-primary m-1" color="primary" type="button" disabled>
+            <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+            <span>Loading...</span>
+        </button>
+    </div>
+</form>

@@ -1,0 +1,88 @@
+<form [formGroup]="empAddEditPriorExpFrm" (ngSubmit)="onSubmitEmpAddEditPriorExpFrm()">
+    <div class="form-group">
+        <div class="row">
+            <div class="col-md-6 p-dropdownStyle">
+                <label>Department<span class="asteriskRequiredColor">*</span> :</label>
+                <p-dropdown formControlName="departmentId" [style]="{'width':'100%'}" [options]="employeeDepertmentList"
+                    [filter]="true" placeholder="Department name" [ngModel]="employeePriorExperience.departmentId"
+                    [ngClass]="{ 'is-invalid': submitted && f.departmentId.errors }">
+                </p-dropdown>
+                <div *ngIf="submitted && f.departmentId.errors" class="validationErrorMsg">
+                    <div *ngIf="f.departmentId.errors.required">Department is required.</div>
+                </div>
+            </div>
+            <div class="col-md-6 p-dropdownStyle">
+                <label>Designation<span class="asteriskRequiredColor">*</span> :</label>
+                <p-dropdown formControlName="designationId" [style]="{'width':'100%'}"
+                    [options]="employeeDesignationList" [filter]="true" placeholder="Designation name"
+                    [ngModel]="employeePriorExperience.designationId"
+                    [ngClass]="{ 'is-invalid': submitted && f.designationId.errors }">
+                </p-dropdown>
+                <div *ngIf="submitted && f.designationId.errors" class="validationErrorMsg">
+                    <div *ngIf="f.designationId.errors.required">Designation is required.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="row">
+            <div class="col-md-6">
+                <label>Company Name<span class="asteriskRequiredColor">*</span> :</label>
+                <input type="text" class="form-control" formControlName="office"
+                    [ngModel]='employeePriorExperience.office' name="office" placeholder="Enter company name"
+                    [ngClass]="{ 'is-invalid': submitted && f.office.errors }"
+                    [ngModel]="employeePriorExperience.office">
+                <div *ngIf="submitted && f.office.errors" class="validationErrorMsg">
+                    <div *ngIf="f.office.errors.required">Company name is required.</div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <label>Joining date - Leaving date<span class="asteriskRequiredColor">*</span> :</label>
+                <input type="text" class="form-control" placeholder="Joining date - Leaving date" bsDaterangepicker
+                    formControlName="range" [ngModel]='employeePriorExperience.range'
+                    [ngClass]="{ 'is-invalid': submitted && f.range.errors }" onkeydown="return false"
+                    [bsConfig]="{ dateInputFormat: 'YYYY-MM-DD', containerClass: 'theme-red' }"
+                    [ngModel]="employeePriorExperience.range" />
+                <div *ngIf="submitted && f.range.errors" class="validationErrorMsg">
+                    <div *ngIf="f.range.errors.required">Joining date - Leaving date is required.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="row">
+            <div class="col-md-6">
+                <label>Experience<span class="asteriskRequiredColor">*</span> :</label>
+                <input type="text" class="form-control" formControlName="experience" name="experience"
+                    placeholder="Enter Experience" [ngClass]="{ 'is-invalid': submitted && f.experience.errors }"
+                    [ngModel]='employeePriorExperience.experience'>
+                <div *ngIf="submitted && f.experience.errors" class="validationErrorMsg">
+                    <div *ngIf="f.experience.errors.required">Experience is required.</div>
+                </div>
+            </div>
+            <div class="col-md-6 p-dropdownStyle">
+                <label>Status :</label>
+                <p-dropdown formControlName="isActive" [style]="{'width':'100%'}" [options]="IsActiveTypes"
+                    [filter]="true"
+                    [ngModel]="employeePriorExperience.isActive ? employeePriorExperience.isActive : selectedIsActiveType"
+                    [ngClass]="{ 'is-invalid': submitted && f.isActive.errors }">
+                </p-dropdown>
+                <div *ngIf="submitted && f.isActive.errors" class="validationErrorMsg">
+                    <div *ngIf="f.isActive.errors.required">Status is required.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- <div class="form-group" >
+        
+    </div> -->
+    <div class="">
+        <button *ngIf="!loading" type="submit" class="btn btn-sm btn-primary m-1">
+            <span><i class="fa fa-dot-circle-o"></i>&nbsp;Save</span>
+        </button>
+        <button *ngIf="loading" class="btn btn-sm btn-primary m-1" color="primary" type="button" disabled>
+            <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+            <span>Loading...</span>
+        </button>
+    </div>
+</form>

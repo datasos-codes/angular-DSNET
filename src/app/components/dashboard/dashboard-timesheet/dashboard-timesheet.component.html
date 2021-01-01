@@ -1,0 +1,82 @@
+<div class="primeng-datatable">
+    <p-table #dashboardtimesheettable [value]="timeSheetList" [paginator]="true" [rows]="10"
+        [showCurrentPageReport]="true" styleClass="ui-table-primedatatable" [rowHover]="true"
+        [rowsPerPageOptions]="[10,25,50]" [filterDelay]="0"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [scrollable]="true"
+        scrollHeight="auto" (sortFunction)="customSortForDashboardTimesheetTable($event)" [customSort]="true"
+        [globalFilterFields]="['fullName','projectName','task','date','billableHours','nonBillableHours','description','status','createdBy','modifiedBy']">
+        <!-- Top bar -->
+        <ng-template pTemplate="caption">
+            <div class="ui-helper-clearfix" style="text-align: left">
+                <!-- globle search -->
+                <input type="text" class="globalSearchTxt"
+                    (input)="dashboardtimesheettable.filterGlobal($event.target.value, 'contains')"
+                    placeholder="Search" />
+            </div>
+        </ng-template>
+        <!-- Table Header -->
+        <ng-template pTemplate="header">
+            <tr>
+                <th pSortableColumn="fullName" style="width: 10em;">Employee
+                    <p-sortIcon field="fullName"></p-sortIcon>
+                </th>
+                <th pSortableColumn="projectName" style="width: 10em;">Project
+                    <p-sortIcon field="projectName"></p-sortIcon>
+                </th>
+                <th pSortableColumn="task" style="width: 8em;">Task
+                    <p-sortIcon field="task"></p-sortIcon>
+                </th>
+                <th pSortableColumn="date" style="width: 8em;">Date
+                    <p-sortIcon field="date"></p-sortIcon>
+                </th>
+                <th pSortableColumn="billableHours" style="width: 6em;">Billable Hours
+                    <p-sortIcon field="billableHours"></p-sortIcon>
+                </th>
+                <th pSortableColumn="nonBillableHours" style="width: 6em;">Non Billable Hours
+                    <p-sortIcon field="nonBillableHours"></p-sortIcon>
+                </th>
+                <th pSortableColumn="description" style="width: 10em;">Description
+                    <p-sortIcon field="description"></p-sortIcon>
+                </th>
+                <th pSortableColumn="status" style="width: 6em;">Status
+                    <p-sortIcon field="status"></p-sortIcon>
+                </th>
+                <th pSortableColumn="createdBy" style="width: 9em;">Created By
+                    <p-sortIcon field="createdBy"></p-sortIcon>
+                </th>
+                <th pSortableColumn="modifiedBy" style="width: 9em;">Modified By
+                    <p-sortIcon field="modifiedBy"></p-sortIcon>
+                </th>
+            </tr>
+        </ng-template>
+        <!-- Table row -->
+        <ng-template pTemplate="body" let-timeSheetListfordashboard>
+            <tr>
+                <td style="width: 10em;text-align: left;padding-left: 8px !important;">
+                    {{timeSheetListfordashboard.fullName}}</td>
+                <td style="width: 10em;text-align: left;padding-left: 8px !important;">
+                    {{timeSheetListfordashboard.projectName}}</td>
+                <td style="width: 8em;text-align: left;padding-left: 8px !important;">{{timeSheetListfordashboard.task}}</td>
+                <td style="width: 8em;">{{ timeSheetListfordashboard.date }}</td>
+                <td style="width: 6em;">{{timeSheetListfordashboard.billableHours}}</td>
+                <td style="width: 6em;">{{timeSheetListfordashboard.nonBillableHours}}</td>
+                <td style="width: 10em;">{{timeSheetListfordashboard.description}}</td>
+                <td style="width: 6em;">
+                    <span [class]="'datatable-badge status-' + timeSheetListfordashboard.status">
+                        {{timeSheetListfordashboard.status}}
+                    </span>
+                </td>
+                <td style="width: 9em;text-align: left;padding-left: 8px !important;">
+                    {{timeSheetListfordashboard.createdBy}}</td>
+                <td style="width: 9em;text-align: left;padding-left: 8px !important;">
+                    {{timeSheetListfordashboard.modifiedBy}}</td>
+            </tr>
+        </ng-template>
+        <!-- No records found -->
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="10" style="text-align:center">No records found.</td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>

@@ -1,0 +1,14 @@
+.upload-file-icon i {
+    float: left;
+    margin-top: 1px;
+    margin-right: 2px;
+}
+
+.uploadFileName {
+    float: right;
+    margin-top: -42px !important;
+}
+
+.updateFilename {
+    float: right;
+}

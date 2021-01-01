@@ -1,0 +1,4 @@
+<p-dialog [header]="displayHeader" [(visible)]="isNeedToRenderUIModal" [style]="UIModalStyle" [baseZIndex]="8000"
+    [modal]='true' position="top" class="ui-modal-content" (onHide)="closeDialog()">
+    <ng-content></ng-content>
+</p-dialog>

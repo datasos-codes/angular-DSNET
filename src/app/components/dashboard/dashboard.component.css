@@ -1,0 +1,17 @@
+/* .arrowUpDown{
+    float     : right;
+    margin-top: 10px;
+    cursor    : pointer;
+}
+.card {
+    margin-bottom: 0.5rem;
+}
+
+.btn.btn-link{
+    pointer-events:none;
+} */
+
+
+.text-decoration {
+    text-decoration: none !important;
+}

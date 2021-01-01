@@ -1,0 +1,65 @@
+<div class="primeng-datatable">
+    <p-table #employeeDashboardAttendanceTable [value]="employeeAttendenceData" [paginator]="true" [rows]="10"
+        [showCurrentPageReport]="true" styleClass="ui-table-primedatatable" [rowHover]="true"
+        [rowsPerPageOptions]="[10,25,50]" [filterDelay]="0"
+        (sortFunction)="customSortForEmployeeDashboardLeavesTable($event)" [customSort]="true"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [scrollable]="true"
+        scrollHeight="auto" [globalFilterFields]="['date','loginTime','logoutTime',
+    'totalHours','comments','status','createdBy','modifiedBy']">
+        <!-- Top bar -->
+        <ng-template pTemplate="caption">
+            <div class="ui-helper-clearfix" style="text-align: left">
+                <!-- globle search -->
+                <input type="text" class="globalSearchTxt"
+                    (input)="employeeDashboardAttendanceTable.filterGlobal($event.target.value, 'contains')"
+                    placeholder="Search" />
+            </div>
+        </ng-template>
+        <!-- Table Header -->
+        <ng-template pTemplate="header">
+            <tr>
+                <th pSortableColumn="date" style="width: 6em;">Date
+                    <p-sortIcon field="date"></p-sortIcon>
+                </th>
+                <th style="width: 6em;">Login time </th>
+                <th style="width: 6em;">Logout time </th>
+                <th style="width: 6em;">Total hours </th>
+                <th pSortableColumn="comments" style="width: 8em;">Comments
+                    <p-sortIcon field="comments"></p-sortIcon>
+                </th>
+                <th pSortableColumn="status" style="width: 6em;">Status
+                    <p-sortIcon field="status"></p-sortIcon>
+                </th>
+                <th pSortableColumn="createdBy" style="width: 9em;">Created By
+                    <p-sortIcon field="createdBy"></p-sortIcon>
+                </th>
+                <th pSortableColumn="modifiedBy" style="width: 9em;">Modified By
+                    <p-sortIcon field="modifiedBy"></p-sortIcon>
+                </th>
+            </tr>
+        </ng-template>
+        <!-- Table row -->
+        <ng-template pTemplate="body" let-employeeAttendence>
+            <tr>
+                <td style="width: 6em;">{{employeeAttendence.date}}</td>
+                <td style="width: 6em;">{{employeeAttendence.loginTime | date:"hh:mm a":"+0000"}}</td>
+                <td style="width: 6em;">{{employeeAttendence.logoutTime | date:"hh:mm a":"+0000"}}</td>
+                <td style="width: 6em;">{{employeeAttendence.totalHours}}</td>
+                <td style="width: 8em;">{{employeeAttendence.comments}}</td>
+                <td style="width: 6em;">
+                    <span [class]="'datatable-badge status-' + employeeAttendence.status">
+                        {{employeeAttendence.status}}
+                    </span>
+                </td>
+                <td style="width: 9em;text-align: left;padding-left: 8px !important;">{{employeeAttendence.createdBy}}</td>
+                <td style="width: 9em;text-align: left;padding-left: 8px !important;">{{employeeAttendence.modifiedBy}}</td>
+            </tr>
+        </ng-template>
+        <!-- No records found -->
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="8" style="text-align:center">No records found.</td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>

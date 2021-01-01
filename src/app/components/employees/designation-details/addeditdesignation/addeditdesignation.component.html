@@ -1,0 +1,50 @@
+<form [formGroup]="empAddEditDesignationFrm" (ngSubmit)="onSubmitEmpAddEditDesignationFrm()">
+    <div class="form-group">
+        <div class="row">
+            <div class="col-md-6 p-dropdownStyle">
+                <label style="margin-block-end: 10px;">Designation<span class="asteriskRequiredColor">*</span> :</label>
+                <p-dropdown formControlName="designationId" [options]="employeeDesignationList" [filter]="true"
+                    placeholder="Designation name" [ngModel]="employeeDesignation.designationId"
+                    [ngClass]="{ 'is-invalid': submitted && f.designationId.errors }">
+                </p-dropdown>
+                <div *ngIf="submitted && f.designationId.errors" class="validationErrorMsg">
+                    <div *ngIf="f.designationId.errors.required">Designation is required.</div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <label>From date - To date<span class="asteriskRequiredColor">*</span> :</label>
+                <input type="text" class="form-control" placeholder="Leave start date - end date" bsDaterangepicker
+                    formControlName="range" [ngModel]='employeeDesignation.range' onkeydown="return false"
+                    [ngClass]="{ 'is-invalid': submitted && f.range.errors }"
+                    [bsConfig]="{ dateInputFormat: 'YYYY-MM-DD', containerClass: 'theme-red' }" />
+                <div *ngIf="submitted && f.range.errors" class="validationErrorMsg">
+                    <div *ngIf="f.range.errors.required">From date - To date date is required.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="row">
+            <div class="col-md-6 p-dropdownStyle">
+                <label>Status :</label>
+                <p-dropdown formControlName="isActive" [style]="{'width':'100%'}" [options]="IsActiveTypes"
+                    [filter]="true"
+                    [ngModel]="employeeDesignation.isActive ? employeeDesignation.isActive : selectedIsActiveType"
+                    [ngClass]="{ 'is-invalid': submitted && f.isActive.errors }">
+                </p-dropdown>
+                <div *ngIf="submitted && f.isActive.errors" class="validationErrorMsg">
+                    <div *ngIf="f.isActive.errors.required">Status is required.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="">
+        <button *ngIf="!loading" type="submit" class="btn btn-sm btn-primary m-1">
+            <span><i class="fa fa-dot-circle-o"></i>&nbsp;Save</span>
+        </button>
+        <button *ngIf="loading" class="btn btn-sm btn-primary m-1" color="primary" type="button" disabled>
+            <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+            <span>Loading...</span>
+        </button>
+    </div>
+</form>
